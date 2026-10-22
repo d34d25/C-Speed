@@ -78,6 +78,8 @@ typedef struct Bullet
 
 } Bullet;
 
+void InitBullet(Bullet* bullet);
+
 typedef struct BulletPool
 {
     Bullet bullets[128];
@@ -95,8 +97,6 @@ typedef struct BulletPool
 } BulletPool;
 
 extern const int BULLET_POOL_SIZE;
-
-void InitBullet(Bullet* bullet);
 
 void InitBulletPool(BulletPool* bulletpool, float firerate, int pelletCount, float spread);
 

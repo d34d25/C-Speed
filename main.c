@@ -17,7 +17,7 @@ int main(void)
 
     BulletPool bulletPool;
 
-    InitBulletPool(&bulletPool, 0.2f, 3, 0.05f);
+    InitBulletPool(&bulletPool, 0.15f, 3, 0.05f);
 
     InitPlayer(&player);
 
@@ -29,9 +29,7 @@ int main(void)
 
         UpdateBulletPool(&bulletPool, dt);
 
-        //if(IsKeyPressed(KEY_Z)) SpawnBullet(&bulletPool, player.x, player.y, 128, 0, -1);
-
-        FireBullet(&bulletPool, player.x, player.y, 128, 0, -1, IsKeyPressed(KEY_Z), IsKeyDown(KEY_Z), dt);
+        FireBullet(&bulletPool, player.x, player.y, 128.0f, 0, -1, IsKeyPressed(KEY_Z), IsKeyDown(KEY_Z), dt);
 
         UpdatePlayer(&player, dt);
 
@@ -46,13 +44,9 @@ int main(void)
                 if(!b) continue;
 
                 DrawSpriteData(&b->spriteData, b->x, b->y, dt);
-
-                //DrawLine(player.x, player.y, b->x, b->y, RED);
             }
 
             DrawSpriteData(&player.spriteData, player.x, player.y, dt);
-
-            //DrawCircle(player.x, player.y, 1, RED);
 
         EndTextureMode();
 

@@ -139,7 +139,6 @@ void UpdateBulletPool(BulletPool* bulletpool, float dt)
             bulletpool->activeBullets[i] = NULL;
         }
     }
-
 }
 
 void SpawnBullet(BulletPool* bulletpool, float x, float y, float speed, float xDir, float yDir)
@@ -173,6 +172,8 @@ void SpawnBullet(BulletPool* bulletpool, float x, float y, float speed, float xD
         b->currentTime = 0.0f;
 
         b->alive = true;
+
+        b->spriteData.rotation = (atan2f(b->yDir, b->xDir) * 180.0f / PI) - 90.0f;
 
         bulletpool->activeBullets[bulletIndex] = b;
         

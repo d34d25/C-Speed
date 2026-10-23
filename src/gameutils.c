@@ -147,6 +147,7 @@ void SpawnBullet(BulletPool* bulletpool, float x, float y, float speed, float xD
 
     int bulletIndex = 0; 
 
+    //inactive bullets
     for(int i = 0; i < BULLET_POOL_SIZE; i++)
     {
         Bullet* currentBullet = bulletpool->inactiveBullets[i];

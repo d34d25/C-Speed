@@ -18,9 +18,11 @@ void InitPlayer(Player* player)
     SpriteData* sprite = &player->spriteData;
 
     sprite->animationSpeed = 0.0f;
-    sprite->currentFrame = 0;
+    
     sprite->flipX = false;
     sprite->flipY = true;
+
+    sprite->currentFrame = 0;
 
     sprite->frameStart = 0;
     sprite->frameEnd = 0;

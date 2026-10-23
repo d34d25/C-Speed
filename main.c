@@ -3,6 +3,8 @@
 
 #include "headers/player.h"
 
+#include "headers/enemy.h"
+
 int main(void)
 {
     InitWindow(SCREEN_SIZE, SCREEN_SIZE, "CSpeed");
@@ -17,7 +19,11 @@ int main(void)
 
     BulletPool bulletPool;
 
+    EnemyPool enemyPool;
+
     InitBulletPool(&bulletPool, 0.15f, 3, 0.05f);
+
+    InitEnemyPool(&enemyPool, 1.5f);
 
     InitPlayer(&player);
 
@@ -33,9 +39,24 @@ int main(void)
 
         UpdatePlayer(&player, dt);
 
+        UpdateEnemyPool(&enemyPool, dt);
+
+        FireEnemy(&enemyPool, dt);
+
         BeginTextureMode(canvas);
 
             ClearBackground(BLACK);
+
+            for(int i = 0; i < ENEMY_POOL_SIZE; i++)
+            {
+                Enemy* e = enemyPool.activeEnemies[i];
+
+                if(!e) continue;
+
+                DrawSpriteData(&e->spriteData, e->x, e->y, dt);
+
+                //DrawLine(player.x, player.y, e->x, e->y, RED);
+            }
 
             for(int i = 0; i < BULLET_POOL_SIZE; i++)
             {

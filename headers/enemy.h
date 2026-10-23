@@ -9,7 +9,9 @@ typedef enum EnemyType
     ENEMY_GREEN,
     ENEMY_PINK,
     ENEMY_ORANGE,
-    ASTEROID
+    ASTEROID,
+
+    ENEMY_COUNT
 
 } EnemyType;
 
@@ -22,30 +24,42 @@ typedef struct Enemy
     float x;
     float y;
 
-    float speed;
+    float speedX;
+    float speedY;
+
+    bool rotated;
+
+    bool alive;
 
 } Enemy;
 
-void InitEnemy(Enemy* enemy, EnemyType type);
+void InitEnemy(Enemy* enemy);
+
+void UpdateEnemy(Enemy* enemy, float dt);
 
 //enemy pool
 
 typedef struct EnemyPool
 {
-    Enemy enemies[20];
+    Enemy enemies[60];
 
-    Enemy* activeEnemies[20];
-    Enemy* inactiveEnemies[20];
+    Enemy* activeEnemies[60];
+    Enemy* inactiveEnemies[60];
+
+    float fireTimer;
+    float firerate;
 
 }EnemyPool;
 
-const int ENEMY_POOL_SIZE;
+extern const int ENEMY_POOL_SIZE;
 
-void InitEnemyPool(EnemyPool* enemypool, EnemyType type);
+void InitEnemyPool(EnemyPool* enemypool, float firerate);
 
 void UpdateEnemyPool(EnemyPool* enemypool, float dt);
 
-void SpawnEnemy(EnemyPool* enemypool);
+void SpawnEnemy(EnemyPool* enemypool, EnemyType type);
+
+void FireEnemy(EnemyPool* enemypool, float dt);
 
 #endif
 

@@ -62,7 +62,7 @@ void DrawSprite(int frame, int posX, int posY, int frameWidth, int frameHeight, 
 
 const int BULLET_POOL_SIZE = 128;
 
-void InitBullet(Bullet *bullet)
+void InitBullet(Bullet *bullet, float maxTime)
 {
     bullet->speed = 0;
 
@@ -73,7 +73,7 @@ void InitBullet(Bullet *bullet)
     bullet->yDir = -1;
 
     bullet->currentTime = 0.0f;
-    bullet->maxTime = 1.5f;
+    bullet->maxTime = maxTime;//1.5f;
 
     bullet->alive = false;
 
@@ -93,11 +93,11 @@ void InitBullet(Bullet *bullet)
     sprite->rotation = 0.0f;
 }
 
-void InitBulletPool(BulletPool *bulletpool, float firerate, int pelletCount, float spread)
+void InitBulletPool(BulletPool *bulletpool, float firerate, int pelletCount, float spread, float bulletMaxTime)
 {
     for(int i = 0; i < BULLET_POOL_SIZE; i++)
     {
-        InitBullet(&bulletpool->bullets[i]);
+        InitBullet(&bulletpool->bullets[i], bulletMaxTime);
 
         bulletpool->inactiveBullets[i] = &bulletpool->bullets[i];
 
@@ -158,7 +158,7 @@ void SpawnBullet(BulletPool* bulletpool, float x, float y, float speed, float xD
             b = currentBullet;
             bulletIndex = i;
         }
-    } 
+    }
     
     if(b != NULL && bulletIndex > 0 && bulletIndex < BULLET_POOL_SIZE)
     {

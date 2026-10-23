@@ -78,7 +78,7 @@ typedef struct Bullet
 
 } Bullet;
 
-void InitBullet(Bullet* bullet);
+void InitBullet(Bullet* bullet, float maxTime);
 
 typedef struct BulletPool
 {
@@ -98,7 +98,7 @@ typedef struct BulletPool
 
 extern const int BULLET_POOL_SIZE;
 
-void InitBulletPool(BulletPool* bulletpool, float firerate, int pelletCount, float spread);
+void InitBulletPool(BulletPool* bulletpool, float firerate, int pelletCount, float spread, float bulletMaxTime);
 
 void UpdateBulletPool(BulletPool* bulletpool, float dt);
 
@@ -115,5 +115,18 @@ void FireBullet(
     bool keyHold,
     float dt
 );
+
+inline void ClearActiveBullets(BulletPool* bulletpool)
+{
+    for(int i = 0; i < BULLET_POOL_SIZE; i++)
+    {
+        Bullet* b = bulletpool->activeBullets[i];
+
+        if(!b) continue;
+
+        bulletpool->activeBullets[i] = NULL;
+        bulletpool->inactiveBullets[i] = b;
+    }
+}
 
 #endif

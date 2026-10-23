@@ -8,11 +8,19 @@ void InitEnemy(Enemy *enemy)
     enemy->x = 0.0f;
     enemy->y = -100.0f;
 
+    enemy->baseSpeedX = 0.0f;
+
+    enemy->baseSpeedY = 100.0f;
+
     enemy->alive = false;
 
-    enemy->rotated = false;    
+    enemy->rotated = false;
 
-    InitBulletPool(&enemy->bulletPool, 0.0f, 0.0f, 0.0f);
+    enemy->divedIntoPlayer = false;
+
+    enemy->type = ASTEROID;
+
+    InitBulletPool(&enemy->bulletPool, 0.0f, 0.0f, 0.0f, 3.0f);
 
     SpriteData* sprite = &enemy->spriteData;
 
@@ -32,9 +40,81 @@ void InitEnemy(Enemy *enemy)
     sprite->rotation = 0.0f;
 }
 
-void UpdateEnemy(Enemy *enemy, float dt)
+void UpdateEnemy(Enemy* enemy, Vector2 playerPos, float dt)
 {
+    enemy->speedY = enemy->baseSpeedY;
+
+    float x = enemy->x;
+    float y = enemy->y;
+
+    switch (enemy->type)
+    {
+    case ENEMY_RED:
+    {
+        if(enemy->y >= NATIVE_SIZE * 0.25f && !enemy->divedIntoPlayer)
+        {
+            if(x > playerPos.x)
+            {
+                enemy->speedX = -enemy->baseSpeedX;
+
+                enemy->divedIntoPlayer = true;
+            }
+            else if(x < playerPos.x)
+            {
+                enemy->speedX = enemy->baseSpeedX;
+
+                enemy->divedIntoPlayer = true;
+            }
+        }
+
+        Vector2 dirToPlayer = Vector2Subtract(playerPos, (Vector2){enemy->x, enemy->y});
+
+        dirToPlayer = Vector2Normalize(dirToPlayer);
+
+        if(enemy->divedIntoPlayer && playerPos.y > y + 15 && enemy->alive)
+        {
+            FireBullet(
+                &enemy->bulletPool,
+                enemy->x,
+                enemy->y,
+                70.0f,
+                dirToPlayer.x,
+                dirToPlayer.y,
+                false,
+                true,
+                dt
+            );
+        }
+    }
+    break;
+
+    case ENEMY_GREEN:
+    {
+
+    }
+    break;
+
+    case ENEMY_PINK:
+    {
+
+    }
+    break;
+
+    case ENEMY_ORANGE:
+    {
+
+    }
+    break;
+    
+    default: break;
+    }
+
+    enemy->x += enemy->speedX * dt;
     enemy->y += enemy->speedY * dt;
+
+    //Vector2 enemyDir = Vector2Normalize((Vector2){enemy->speedX, enemy->speedY});
+
+    //enemy->spriteData.rotation = (atan2f(-enemyDir.x, enemyDir.y) * 180.0f / PI);
 }
 
 void InitEnemyPool(EnemyPool *enemypool, float firerate)
@@ -52,23 +132,29 @@ void InitEnemyPool(EnemyPool *enemypool, float firerate)
     enemypool->fireTimer = 0.0f;
 }
 
-void UpdateEnemyPool(EnemyPool *enemypool, float dt)
+void UpdateEnemyPool(EnemyPool* enemypool, Vector2 playerPos, float dt)
 {
-    //active enemies
     for(int i = 0; i < ENEMY_POOL_SIZE; i++)
     {
+        //all enemies
+        Enemy* eAll = &enemypool->enemies[i];
+                
+        UpdateBulletPool(&eAll->bulletPool, dt);
+
+        //active enemies
         Enemy* e = enemypool->activeEnemies[i];
 
-        if(e == NULL) continue;
+        if(!e) continue;
 
-        UpdateEnemy(e, dt);
+        UpdateEnemy(e, playerPos, dt);
 
         //bound checking
-        if(e->y - 10 > NATIVE_SIZE || e->x <= -10 || e->x + 10 >= NATIVE_SIZE)
+        if(e->y > NATIVE_SIZE + 10 || e->x < -10 || e->x > NATIVE_SIZE + 10)
         {
             e->alive = false;
         }
 
+        //swap from active to inactive
         if(!e->alive)
         {
             enemypool->inactiveEnemies[i] = e;
@@ -106,6 +192,13 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
 
         e->rotated = false;
 
+        e->divedIntoPlayer = false;
+
+        e->type = type;
+
+        e->speedX = 0.0f;
+        e->speedY = 0.0f;
+
         float firerate;
         float spread;
 
@@ -115,17 +208,17 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
 
         SpriteData* sprite = &e->spriteData;
 
-        switch (type)
+        switch (e->type)
         {
-            case ENEMY_RED:
+        case ENEMY_RED:
         {
-            spread = 0.02f;
-            firerate = 2.25f;
+            spread = 0.04f;
+            firerate = 0.8f;
 
-            pelletCount = 1;
+            pelletCount = 3;
 
-            e->speedY = 30.0f;
-            e->speedX = 40.0f;
+            e->baseSpeedY = 30.0f;
+            e->baseSpeedX = 40.0f;
 
             frame = 1;
         }
@@ -138,8 +231,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
 
             pelletCount = 2;
 
-            e->speedY = 25.0f;
-            e->speedX = 45.0f;
+            e->baseSpeedY = 25.0f;
+            e->baseSpeedX = 45.0f;
 
             frame = 2;
         }
@@ -152,8 +245,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
 
             pelletCount = 0;
 
-            e->speedY = 40.0f;
-            e->speedX = 40.0f;
+            e->baseSpeedY = 40.0f;
+            e->baseSpeedX = 40.0f;
 
             frame = 3;
         }
@@ -166,8 +259,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
 
             pelletCount = 3;
 
-            e->speedY = 20.0f;
-            e->speedX = 0.0f;
+            e->baseSpeedY = 20.0f;
+            e->baseSpeedX = 0.0f;
 
             frame = 4;
         }
@@ -180,8 +273,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
 
             pelletCount = 0;
 
-            e->speedY = 20.0f;
-            e->speedX = 0.0f;
+            e->baseSpeedY = 20.0f;
+            e->baseSpeedX = 0.0f;
 
             frame = 5;
         }
@@ -194,8 +287,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
 
             pelletCount = 0;
 
-            e->speedY = 100.0f;
-            e->speedX = 0.0f;
+            e->baseSpeedY = 100.0f;
+            e->baseSpeedX = 0.0f;
 
             frame = 5;
         } 
@@ -212,13 +305,15 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
         sprite->flipX = false;
         sprite->flipY = false;
 
-        BulletPool* enmeyBulletPool = &e->bulletPool;
+        BulletPool* enemyBulletPool = &e->bulletPool;
 
-        enmeyBulletPool->firerate = firerate;
-        enmeyBulletPool->spread = spread;
-        enmeyBulletPool->pelletCount = pelletCount;
+        //ClearActiveBullets(enemyBulletPool);
 
-        enmeyBulletPool->fireTimer = 0.0f;
+        enemyBulletPool->firerate = firerate;
+        enemyBulletPool->spread = spread;
+        enemyBulletPool->pelletCount = pelletCount;
+
+        enemyBulletPool->fireTimer = 0.0f;
 
         enemypool->activeEnemies[enemyIndex] = e;
 
@@ -245,7 +340,7 @@ void FireEnemy(EnemyPool *enemypool, float dt)
 
     if(canSpawn)
     {
-        EnemyType spawnType = GetRandomValue(0, ENEMY_COUNT - 1);
+        EnemyType spawnType = ENEMY_RED; //GetRandomValue(0, ENEMY_COUNT - 1);
 
         SpawnEnemy(enemypool, spawnType);
     }

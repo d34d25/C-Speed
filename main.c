@@ -21,7 +21,7 @@ int main(void)
 
     EnemyPool enemyPool;
 
-    InitBulletPool(&bulletPool, 0.15f, 3, 0.05f);
+    InitBulletPool(&bulletPool, 0.15f, 3, 0.05f, 1.5f);
 
     InitEnemyPool(&enemyPool, 1.5f);
 
@@ -31,6 +31,10 @@ int main(void)
     {
         float dt = GetFrameTime();
 
+        enemyPool.firerate -= 0.005f * dt;
+
+        if(enemyPool.firerate <= 0.0f) enemyPool.firerate = 0.0f;
+
         UpdatePlayerInput(&player);
 
         UpdateBulletPool(&bulletPool, dt);
@@ -39,7 +43,7 @@ int main(void)
 
         UpdatePlayer(&player, dt);
 
-        UpdateEnemyPool(&enemyPool, dt);
+        UpdateEnemyPool(&enemyPool, (Vector2){player.x, player.y}, dt);
 
         FireEnemy(&enemyPool, dt);
 
@@ -49,13 +53,18 @@ int main(void)
 
             for(int i = 0; i < ENEMY_POOL_SIZE; i++)
             {
-                Enemy* e = enemyPool.activeEnemies[i];
+                Enemy* eAll = &enemyPool.enemies[i];
 
-                if(!e) continue;
+                DrawSpriteData(&eAll->spriteData, eAll->x, eAll->y, dt);
 
-                DrawSpriteData(&e->spriteData, e->x, e->y, dt);
+                for(int a = 0; a < BULLET_POOL_SIZE; a++)
+                {
+                    Bullet* b = eAll->bulletPool.activeBullets[a];
 
-                //DrawLine(player.x, player.y, e->x, e->y, RED);
+                    if(!b) continue;
+
+                    DrawSpriteData(&b->spriteData, b->x, b->y, dt);
+                }
             }
 
             for(int i = 0; i < BULLET_POOL_SIZE; i++)

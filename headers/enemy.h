@@ -21,8 +21,13 @@ typedef struct Enemy
 
     SpriteData spriteData;
 
+    EnemyType type;
+
     float x;
     float y;
+
+    float baseSpeedX;
+    float baseSpeedY;
 
     float speedX;
     float speedY;
@@ -31,11 +36,13 @@ typedef struct Enemy
 
     bool alive;
 
+    bool divedIntoPlayer;
+
 } Enemy;
 
 void InitEnemy(Enemy* enemy);
 
-void UpdateEnemy(Enemy* enemy, float dt);
+void UpdateEnemy(Enemy* enemy, Vector2 playerPos, float dt);
 
 //enemy pool
 
@@ -55,7 +62,7 @@ extern const int ENEMY_POOL_SIZE;
 
 void InitEnemyPool(EnemyPool* enemypool, float firerate);
 
-void UpdateEnemyPool(EnemyPool* enemypool, float dt);
+void UpdateEnemyPool(EnemyPool* enemypool, Vector2 playerPos, float dt);
 
 void SpawnEnemy(EnemyPool* enemypool, EnemyType type);
 

@@ -338,7 +338,7 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
             pelletCount = 0;
 
             e->baseSpeedY = 40.0f;
-            e->baseSpeedX = 40.0f;
+            e->baseSpeedX = 70.0f;
 
             frame = 3;
         }
@@ -398,8 +398,6 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
         sprite->flipY = false;
 
         BulletPool* enemyBulletPool = &e->bulletPool;
-
-        //ClearActiveBullets(enemyBulletPool);
 
         enemyBulletPool->firerate = firerate;
         enemyBulletPool->spread = spread;

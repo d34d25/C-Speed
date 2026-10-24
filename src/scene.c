@@ -44,23 +44,36 @@ void UpdateScene(Scene *scene, float dt)
 
     for(int i = 0; i < BULLET_POOL_SIZE; i++)
     {
-        Bullet* playerBullet =  scene->player.bulletPool.activeBullets[i];
-
-        if(!playerBullet) continue;
+        Bullet* playerBullet = scene->player.bulletPool.activeBullets[i];
 
         for(int e = 0; e < ENEMY_POOL_SIZE; e++)
         {
             Enemy* activeEnemy = scene->enemyPool.activeEnemies[e];
-
-            if(!activeEnemy) continue;
-
-            if(CheckCollisionCircleRec(
+            
+            if(playerBullet && activeEnemy)
+            {
+                if(CheckCollisionCircleRec(
                 (Vector2){playerBullet->x, playerBullet->y},
                 playerBullet->radius,
                 activeEnemy->hitbox
-            ))
+                ))
+                {
+                    playerBullet->alive = false;
+                }
+            }
+
+            Bullet* enemyBullet = scene->enemyPool.enemies[e].bulletPool.activeBullets[i];
+
+            if(enemyBullet)
             {
-                playerBullet->alive = false;
+                if(CheckCollisionCircleRec(
+                (Vector2){enemyBullet->x, enemyBullet->y},
+                enemyBullet->radius,
+                scene->player.hitbox
+                ))
+                {
+                    enemyBullet->alive = false;
+                }
             }
         }
     }

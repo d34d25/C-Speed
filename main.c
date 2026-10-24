@@ -1,9 +1,7 @@
 
 #include "raylib.h"
 
-#include "headers/player.h"
-
-#include "headers/enemy.h"
+#include "headers/scene.h"
 
 int main(void)
 {
@@ -15,74 +13,19 @@ int main(void)
 
     InitAssets();
 
-    Player player;
+    Scene scene;
 
-    BulletPool bulletPool;
-
-    EnemyPool enemyPool;
-
-    InitBulletPool(&bulletPool, 0.15f, 3, 0.05f, 1.5f, 6);
-
-    InitEnemyPool(&enemyPool, 1.5f);
-
-    InitPlayer(&player);
+    InitScene(&scene);
 
     while (!WindowShouldClose())
     {
         float dt = GetFrameTime();
 
-        enemyPool.firerate -= 0.005f * dt;
-
-        if(enemyPool.firerate <= 0.0f) enemyPool.firerate = 0.0f;
-
-        UpdatePlayerInput(&player);
-
-        UpdateBulletPool(&bulletPool, dt);
-
-        FireBullet(
-            &bulletPool,
-            player.x, player.y,
-            128.0f, 0, -1,
-            IsKeyPressed(KEY_Z), IsKeyDown(KEY_Z), true,
-            dt
-        );
-
-        UpdatePlayer(&player, dt);
-
-        UpdateEnemyPool(&enemyPool, (Vector2){player.x, player.y}, dt);
-
-        FireEnemy(&enemyPool, dt);
+        UpdateScene(&scene, dt);
 
         BeginTextureMode(canvas);
-
-            ClearBackground(BLACK);
-
-            for(int i = 0; i < ENEMY_POOL_SIZE; i++)
-            {
-                Enemy* eAll = &enemyPool.enemies[i];
-
-                DrawSpriteData(&eAll->spriteData, eAll->x, eAll->y, dt);
-
-                for(int a = 0; a < BULLET_POOL_SIZE; a++)
-                {
-                    Bullet* b = eAll->bulletPool.activeBullets[a];
-
-                    if(!b) continue;
-
-                    DrawSpriteData(&b->spriteData, b->x, b->y, dt);
-                }
-            }
-
-            for(int i = 0; i < BULLET_POOL_SIZE; i++)
-            {
-                Bullet* b = bulletPool.activeBullets[i];
-
-                if(!b) continue;
-
-                DrawSpriteData(&b->spriteData, b->x, b->y, dt);
-            }
-
-            DrawSpriteData(&player.spriteData, player.x, player.y, dt);
+        
+        DrawScene(&scene, dt);
 
         EndTextureMode();
 

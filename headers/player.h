@@ -5,7 +5,13 @@
 
 typedef struct Player
 {
+    BulletPool bulletPool;
+
     SpriteData spriteData;
+
+    Rectangle hitbox;
+
+    float size;
 
     float x;
     float y;

@@ -77,6 +77,8 @@ void InitBullet(Bullet *bullet, float maxTime, int bulletSprite)
 
     bullet->alive = false;
 
+    bullet->radius = 1.5f;
+
     SpriteData* sprite = &bullet->spriteData;
 
     sprite->animationSpeed = 0.0f;

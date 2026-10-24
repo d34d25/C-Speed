@@ -59,9 +59,19 @@ inline void DrawSpriteData(SpriteData* data, int x, int y, float dt)
     DrawSprite(data->currentFrame, x, y, data->width, data->height, data->rotation, data->flipX, data->flipY);
 }
 
+inline void UpdateHitbox(Rectangle* rec, float x, float y, float size)
+{
+    float halfSize = size * 0.5f;
+
+    rec->x = x - halfSize;
+    rec->y = y - halfSize;
+}
+
 typedef struct Bullet
 {
     SpriteData spriteData;
+
+    float radius;
 
     float currentTime;
     float maxTime;
@@ -143,6 +153,19 @@ inline void ClearActiveBullets(BulletPool* bulletpool)
         bulletpool->activeBullets[i] = NULL;
         bulletpool->inactiveBullets[i] = b;
     }
+}
+
+//physics
+
+inline void CollideScreenEdges(Rectangle* rec, float* x, float* y)
+{
+    if(rec->x <= 0.0f) *x = rec->width * 0.5f;
+
+    if(rec->x + rec->width >= NATIVE_SIZE) *x = NATIVE_SIZE - rec->width * 0.5f;
+
+    if(rec->y <= 0.0f) *y = rec->height * 0.5f;
+
+    if(rec->y + rec->height >= NATIVE_SIZE) *y = NATIVE_SIZE - rec->height * 0.5f;
 }
 
 #endif

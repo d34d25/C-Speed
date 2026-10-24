@@ -15,6 +15,16 @@ void InitPlayer(Player* player)
 
     player->shooting = false;
 
+    player->size = 6.0f;
+
+    player->hitbox.x = player->x;
+    player->hitbox.y = player->y;
+
+    player->hitbox.width = player->size;
+    player->hitbox.height = player->size;
+
+    InitBulletPool(&player->bulletPool, 0.15f, 3, 0.05f, 1.5f, 6);
+
     SpriteData* sprite = &player->spriteData;
 
     sprite->animationSpeed = 0.0f;
@@ -44,6 +54,20 @@ void UpdatePlayerInput(Player *player)
 
 void UpdatePlayer(Player *player, float dt)
 {
+    //bulletpool
+
+    UpdateBulletPool(&player->bulletPool, dt);
+
+    FireBullet(
+        &player->bulletPool,
+        player->x, player->y,
+        128.0f, 0, -1,
+        IsKeyPressed(KEY_Z), IsKeyDown(KEY_Z), true,
+        dt
+    );
+    
+    //player speed and position
+
     Vector2 playerSpeed = {0.0f, 0.0f};
 
     float speed = player->speed * dt;
@@ -70,4 +94,6 @@ void UpdatePlayer(Player *player, float dt)
 
     player->x += finalSpeed.x;
     player->y += finalSpeed.y;
+
+    UpdateHitbox(&player->hitbox, player->x, player->y, player->size);
 }

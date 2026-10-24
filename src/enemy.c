@@ -20,6 +20,14 @@ void InitEnemy(Enemy *enemy)
 
     enemy->type = ASTEROID;
 
+    enemy->size = 6.0f;
+
+    enemy->hitbox.x = enemy->x;
+    enemy->hitbox.y = enemy->y;
+
+    enemy->hitbox.width = enemy->size;
+    enemy->hitbox.height = enemy->size;
+
     InitBulletPool(&enemy->bulletPool, 0.0f, 0.0f, 0.0f, 3.0f, 7);
 
     SpriteData* sprite = &enemy->spriteData;
@@ -189,9 +197,7 @@ void UpdateEnemy(Enemy* enemy, Vector2 playerPos, float dt)
     enemy->x += enemy->speedX * dt;
     enemy->y += enemy->speedY * dt;
 
-    //Vector2 enemyDir = Vector2Normalize((Vector2){enemy->speedX, enemy->speedY});
-
-    //enemy->spriteData.rotation = (atan2f(-enemyDir.x, enemyDir.y) * 180.0f / PI);
+    UpdateHitbox(&enemy->hitbox, enemy->x, enemy->y, enemy->size);
 }
 
 void InitEnemyPool(EnemyPool *enemypool, float firerate)
@@ -316,7 +322,7 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
             else dirX = 1; 
 
             e->baseSpeedY = 25.0f;
-            e->baseSpeedX = 45.0f * dirX;
+            e->baseSpeedX = 60.0f * dirX;
 
             e->speedX = e->baseSpeedX;
             

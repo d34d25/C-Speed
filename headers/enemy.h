@@ -21,7 +21,11 @@ typedef struct Enemy
 
     SpriteData spriteData;
 
+    Rectangle hitbox;
+
     EnemyType type;
+
+    float size;
 
     float x;
     float y;

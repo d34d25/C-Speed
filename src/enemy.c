@@ -20,7 +20,7 @@ void InitEnemy(Enemy *enemy)
 
     enemy->type = ASTEROID;
 
-    InitBulletPool(&enemy->bulletPool, 0.0f, 0.0f, 0.0f, 3.0f);
+    InitBulletPool(&enemy->bulletPool, 0.0f, 0.0f, 0.0f, 3.0f, 7);
 
     SpriteData* sprite = &enemy->spriteData;
 
@@ -82,6 +82,7 @@ void UpdateEnemy(Enemy* enemy, Vector2 playerPos, float dt)
                 dirToPlayer.y,
                 false,
                 true,
+                false,
                 dt
             );
         }
@@ -90,19 +91,95 @@ void UpdateEnemy(Enemy* enemy, Vector2 playerPos, float dt)
 
     case ENEMY_GREEN:
     {
+        bool hitLeftSide = enemy->x <= 0.0f;
+        bool hitRightSide = enemy->x >= NATIVE_SIZE;
 
+        if(hitLeftSide || hitRightSide)
+        {
+            float pushAmount = 2.5f;
+
+            if(hitLeftSide)
+            {
+                enemy->x += pushAmount;
+            }
+
+            if(hitRightSide)
+            {
+                enemy->x -= pushAmount;
+            }
+
+            enemy->speedX *= -1.0f;
+        }
+
+        if(enemy->y > 0.0f)
+        {
+            FireBullet(
+                &enemy->bulletPool,
+                enemy->x,
+                enemy->y,
+                70.0f,
+                0.0f,
+                1.0f,
+                false,
+                true,
+                false,
+                dt
+            );
+        }
     }
     break;
 
     case ENEMY_PINK:
     {
+        if(enemy->divedIntoPlayer) enemy->speedY = 0.0f;
 
+        if(!enemy->divedIntoPlayer)
+        {
+            float threshold = 1.0f;
+
+            bool topRange = enemy->y > playerPos.y - threshold;
+            bool bottomRange = enemy->y < playerPos.y + threshold;
+
+            if(topRange && bottomRange)
+            {
+                enemy->speedY = 0.0f;
+
+                if(enemy->x > playerPos.x)
+                {
+                    enemy->speedX = -enemy->baseSpeedX;
+
+                    enemy->spriteData.rotation = 90;
+                }
+                else if(enemy->x < playerPos.x)
+                {
+                    enemy->speedX = enemy->baseSpeedX;
+
+                    enemy->spriteData.rotation = -90;
+                }
+
+                enemy->divedIntoPlayer = true;
+            }
+        }
     }
     break;
 
     case ENEMY_ORANGE:
     {
-
+        if(enemy->y > -10 && enemy->y < NATIVE_SIZE + 10)
+        {
+            FireBullet(
+                &enemy->bulletPool,
+                enemy->x,
+                enemy->y,
+                70.0f,
+                0.0f,
+                1.0f,
+                false,
+                true,
+                false,
+                dt
+            );
+        }
     }
     break;
     
@@ -227,13 +304,22 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
         case ENEMY_GREEN:
         {
             firerate = 2.0f;
-            spread = 0.01f;
+            spread = 0.80f;
 
-            pelletCount = 2;
+            pelletCount = 3;
+            
+            int randValue = GetRandomValue(0, 100);
+
+            int dirX;
+
+            if(randValue < 50) dirX = -1;
+            else dirX = 1; 
 
             e->baseSpeedY = 25.0f;
-            e->baseSpeedX = 45.0f;
+            e->baseSpeedX = 45.0f * dirX;
 
+            e->speedX = e->baseSpeedX;
+            
             frame = 2;
         }
         break;
@@ -340,7 +426,7 @@ void FireEnemy(EnemyPool *enemypool, float dt)
 
     if(canSpawn)
     {
-        EnemyType spawnType = ENEMY_RED; //GetRandomValue(0, ENEMY_COUNT - 1);
+        EnemyType spawnType = GetRandomValue(0, ENEMY_COUNT - 1);
 
         SpawnEnemy(enemypool, spawnType);
     }

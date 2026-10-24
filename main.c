@@ -21,7 +21,7 @@ int main(void)
 
     EnemyPool enemyPool;
 
-    InitBulletPool(&bulletPool, 0.15f, 3, 0.05f, 1.5f);
+    InitBulletPool(&bulletPool, 0.15f, 3, 0.05f, 1.5f, 6);
 
     InitEnemyPool(&enemyPool, 1.5f);
 
@@ -39,7 +39,13 @@ int main(void)
 
         UpdateBulletPool(&bulletPool, dt);
 
-        FireBullet(&bulletPool, player.x, player.y, 128.0f, 0, -1, IsKeyPressed(KEY_Z), IsKeyDown(KEY_Z), dt);
+        FireBullet(
+            &bulletPool,
+            player.x, player.y,
+            128.0f, 0, -1,
+            IsKeyPressed(KEY_Z), IsKeyDown(KEY_Z), true,
+            dt
+        );
 
         UpdatePlayer(&player, dt);
 

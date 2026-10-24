@@ -62,7 +62,7 @@ void DrawSprite(int frame, int posX, int posY, int frameWidth, int frameHeight, 
 
 const int BULLET_POOL_SIZE = 128;
 
-void InitBullet(Bullet *bullet, float maxTime)
+void InitBullet(Bullet *bullet, float maxTime, int bulletSprite)
 {
     bullet->speed = 0;
 
@@ -80,12 +80,14 @@ void InitBullet(Bullet *bullet, float maxTime)
     SpriteData* sprite = &bullet->spriteData;
 
     sprite->animationSpeed = 0.0f;
-    sprite->currentFrame = 6;
+    
     sprite->flipX = false;
     sprite->flipY = true;
 
-    sprite->frameStart = 6;
-    sprite->frameEnd = 6;
+    sprite->currentFrame = bulletSprite;
+
+    sprite->frameStart = bulletSprite;
+    sprite->frameEnd = bulletSprite;
 
     sprite->width = 8;
     sprite->height = 8;
@@ -93,11 +95,18 @@ void InitBullet(Bullet *bullet, float maxTime)
     sprite->rotation = 0.0f;
 }
 
-void InitBulletPool(BulletPool *bulletpool, float firerate, int pelletCount, float spread, float bulletMaxTime)
+void InitBulletPool(
+    BulletPool *bulletpool,
+    float firerate,
+    int pelletCount,
+    float spread,
+    float bulletMaxTime,
+    int bulletSprite
+)
 {
     for(int i = 0; i < BULLET_POOL_SIZE; i++)
     {
-        InitBullet(&bulletpool->bullets[i], bulletMaxTime);
+        InitBullet(&bulletpool->bullets[i], bulletMaxTime, bulletSprite);
 
         bulletpool->inactiveBullets[i] = &bulletpool->bullets[i];
 
@@ -141,7 +150,15 @@ void UpdateBulletPool(BulletPool* bulletpool, float dt)
     }
 }
 
-void SpawnBullet(BulletPool* bulletpool, float x, float y, float speed, float xDir, float yDir)
+void SpawnBullet(
+    BulletPool* bulletpool,
+    float x,
+    float y,
+    float speed,
+    float xDir,
+    float yDir,
+    bool rotateSprite
+)
 {
     Bullet* b;
 
@@ -174,7 +191,7 @@ void SpawnBullet(BulletPool* bulletpool, float x, float y, float speed, float xD
 
         b->alive = true;
 
-        b->spriteData.rotation = (atan2f(b->yDir, b->xDir) * 180.0f / PI) - 90.0f;
+        if(rotateSprite) b->spriteData.rotation = (atan2f(b->yDir, b->xDir) * 180.0f / PI) - 90.0f;
 
         bulletpool->activeBullets[bulletIndex] = b;
         
@@ -191,6 +208,7 @@ void FireBullet(
     float yDir,
     bool keyPress,
     bool keyHold,
+    bool rotateSprite,
     float dt
 )
 {
@@ -226,7 +244,7 @@ void FireBullet(
             float newX = xDir * angleCos - yDir * angleSin;
             float newY = xDir * angleSin + yDir * angleCos;
             
-            SpawnBullet(bulletpool, x, y, speed, newX, newY);
+            SpawnBullet(bulletpool, x, y, speed, newX, newY, rotateSprite);
         }
     }
 }

@@ -22,6 +22,10 @@ int main(void)
         float dt = GetFrameTime();
 
         if(scene.player.lives > 0) UpdateScene(&scene, dt);
+        else
+        {
+            if(IsKeyPressed(KEY_R)) InitScene(&scene);
+        }
 
         BeginTextureMode(canvas);
         

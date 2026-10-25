@@ -26,7 +26,7 @@ int main(void)
         BeginTextureMode(canvas);
         
         if(scene.player.lives > 0) DrawScene(&scene, dt);
-        else DrawText("Game Over", 40, 50, 1, WHITE);
+        else DrawText("Game Over", 40, 50, 1, PICO_WHITE);
 
         EndTextureMode();
 

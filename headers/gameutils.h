@@ -10,6 +10,8 @@
 
 #include "raymath.h"
 
+#define PICO_WHITE (Color){255,241,232,255}
+
 extern const int NATIVE_SIZE;
 
 extern const int SCALE;

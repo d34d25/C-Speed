@@ -244,7 +244,7 @@ void DrawScene(Scene *scene, float dt)
 
         if(star)
         {
-            Color starColor = WHITE;
+            Color starColor = PICO_WHITE;
 
             starColor.a = 100; //GetRandomValue(100, 200);
 
@@ -269,7 +269,7 @@ void DrawScene(Scene *scene, float dt)
         DrawSpriteData(&scene->player.spriteData, scene->player.x, scene->player.y, dt);
     }
 
-    DrawText(TextFormat("Time: %i", (int)scene->timer), NATIVE_SIZE - 40, 1, 1, WHITE);
+    DrawText(TextFormat("Time: %i", (int)scene->timer), NATIVE_SIZE - 40, 1, 1, PICO_WHITE);
 
     for(int i = 1; i <= scene->player.lives; i++)
     {

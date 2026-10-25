@@ -55,9 +55,12 @@ typedef struct Player
     bool movingDown;
 
     bool shooting;
+    bool shootingPress;
 
     bool hit;
     bool wasHit;
+
+    bool dead;
     
 } Player;
 
@@ -76,6 +79,25 @@ inline void ResetPlayerFlags(Player* player)
 inline void UpdatePlayerFlags(Player* player)
 {
     player->wasHit = player->hit;
+}
+
+inline void ResetPlayerInput(Player* player)
+{
+    player->movingRight = false;
+    player->movingLeft = false;
+
+    player->movingDown = false;
+    player->movingUp = false;
+
+    player->shootingPress = false;
+    player->shooting = false;
+}
+
+inline bool IsPlayerAlive(Player* player)
+{
+    if(!player) return false;
+
+    return player->lives > 0;
 }
 
 #endif

@@ -26,15 +26,13 @@ void InitScene(Scene *scene)
     scene->timer = 0.0f;
 
     scene->frameCounter = 0;
+
+    scene->gameover = false;
 }
 
 void UpdateScene(Scene *scene, float dt)
 {
-    scene->frameCounter++;
-
-    if(scene->frameCounter >= 4) scene->frameCounter = 0;
-
-    scene->timer += dt;
+    if(IsPlayerAlive(&scene->player)) scene->timer += dt;
 
     ResetPlayerFlags(&scene->player);
 
@@ -66,7 +64,8 @@ void UpdateScene(Scene *scene, float dt)
         dt
     );
 
-    UpdatePlayerInput(&scene->player);
+    if(IsPlayerAlive(&scene->player)) UpdatePlayerInput(&scene->player);
+    else ResetPlayerInput(&scene->player);
 
     UpdatePlayer(&scene->player, dt);
 
@@ -86,7 +85,7 @@ void UpdateScene(Scene *scene, float dt)
 
         PowerUP* currentPowerUp = scene->powerUps.activePowerUps[i];
 
-        if(currentPowerUp)
+        if(currentPowerUp && IsPlayerAlive(&scene->player))
         {
             if(CheckCollisionCircleRec(
                 (Vector2){currentPowerUp->x, currentPowerUp->y},
@@ -163,7 +162,7 @@ void UpdateScene(Scene *scene, float dt)
                 (Vector2){enemyBullet->x, enemyBullet->y},
                 enemyBullet->radius,
                 scene->player.hitbox
-                ))
+                ) && IsPlayerAlive(&scene->player))
                 {
                     enemyBullet->alive = false;
 
@@ -202,10 +201,12 @@ void UpdateScene(Scene *scene, float dt)
 
         scene->player.invulTimer = 0.0f;
 
-        if(scene->player.lives <= 0) scene->player.lives = 0;
+        if(!IsPlayerAlive(&scene->player)) scene->player.lives = 0;
     }
 
     UpdatePlayerFlags(&scene->player);
+
+    if(scene->player.dead) scene->gameover = true;
 }
 
 void DrawScene(Scene *scene, float dt)
@@ -260,9 +261,9 @@ void DrawScene(Scene *scene, float dt)
         if(p) DrawSpriteData(&p->spriteData, p->x, p->y, dt);
     }
 
-    if(scene->player.invulTimer < scene->player.maxInvulTimer)
+    if(scene->player.invulTimer < scene->player.maxInvulTimer && IsPlayerAlive(&scene->player))
     {
-        if(scene->frameCounter % 4 == 0) DrawSpriteData(&scene->player.spriteData, scene->player.x, scene->player.y, dt);
+        if(scene->frameCounter % 4 == 0 ) DrawSpriteData(&scene->player.spriteData, scene->player.x, scene->player.y, dt);
     }
     else
     {
@@ -274,5 +275,15 @@ void DrawScene(Scene *scene, float dt)
     for(int i = 1; i <= scene->player.lives; i++)
     {
         DrawSprite(0, 8 * i, 8 * 1, 8, 8, 0, false, true);
+    }
+
+    if(scene->gameover)
+    {
+        DrawText("Game Over", 40, 50, 1, PICO_WHITE); 
+
+        if(scene->frameCounter > 60)
+        {
+            DrawText("Prees R to restart", 20, 66, 1, PICO_WHITE);
+        }
     }
 }

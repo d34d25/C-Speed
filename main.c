@@ -21,16 +21,18 @@ int main(void)
     {
         float dt = GetFrameTime();
 
-        if(scene.player.lives > 0) UpdateScene(&scene, dt);
-        else
+        UpdateScene(&scene, dt);
+
+        if(scene.gameover)
         {
             if(IsKeyPressed(KEY_R)) InitScene(&scene);
         }
 
+        TickSceneCouner(&scene);
+
         BeginTextureMode(canvas);
         
-        if(scene.player.lives > 0) DrawScene(&scene, dt);
-        else DrawText("Game Over", 40, 50, 1, PICO_WHITE);
+        DrawScene(&scene, dt);
 
         EndTextureMode();
 

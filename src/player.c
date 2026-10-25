@@ -26,13 +26,9 @@ void InitPlayer(Player* player)
 
     player->speed = 60.0f;
 
-    player->movingRight = false;
-    player->movingLeft = false;
+    ResetPlayerInput(player);
 
-    player->movingDown = false;
-    player->movingUp = false;
-
-    player->shooting = false;
+    player->dead = false;
 
     player->size = 6.0f;
 
@@ -51,8 +47,6 @@ void InitPlayer(Player* player)
     player->maxInvulTimer = 1.5f;
 
     player->invulTimer = player->maxInvulTimer;
-
-    //InitBulletPool(&player->bulletPool, 0.15f, 3, 0.05f, 1.5f, 6);
 
     InitBulletPool(&player->bulletPool, playerBaseFirerate, playerBasePelletCount, playerBaseSpread, 1.5f, 6);
 
@@ -81,6 +75,10 @@ void UpdatePlayerInput(Player *player)
 
     player->movingUp = IsKeyDown(KEY_UP);
     player->movingDown = IsKeyDown(KEY_DOWN);
+
+    player->shooting = IsKeyDown(KEY_Z);
+    
+    player->shootingPress = IsKeyPressed(KEY_Z); 
 }
 
 void UpdatePlayer(Player *player, float dt)
@@ -93,7 +91,7 @@ void UpdatePlayer(Player *player, float dt)
         &player->bulletPool,
         player->x, player->y,
         128.0f, 0, -1,
-        IsKeyPressed(KEY_Z), IsKeyDown(KEY_Z), true,
+        player->shootingPress, player->shooting, true,
         dt
     );
     
@@ -164,4 +162,15 @@ void UpdatePlayer(Player *player, float dt)
     player->invulTimer += dt;
 
     if(player->invulTimer >= player->maxInvulTimer) player->invulTimer = player->maxInvulTimer;
+
+    if(!IsPlayerAlive(player))
+    {
+        if(player->spriteData.currentFrame < 17) player->spriteData.animationSpeed = 15.0f;
+    
+        player->spriteData.frameStart = 11;
+
+        player->spriteData.frameEnd = 17;
+
+        player->dead = true;
+    }
 }

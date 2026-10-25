@@ -36,7 +36,7 @@ typedef struct SpriteData
     int frameStart;
     int frameEnd;
 
-    int currentFrame;
+    float currentFrame;
 
     bool flipX;
     bool flipY;
@@ -55,10 +55,12 @@ inline void DrawSpriteData(SpriteData* data, int x, int y, float dt)
     {
         data->currentFrame += data->animationSpeed * dt;
 
+        if(data->currentFrame < data->frameStart) data->currentFrame = data->frameEnd;
+
         if(data->currentFrame > data->frameEnd) data->currentFrame = data->frameStart;
     }
 
-    DrawSprite(data->currentFrame, x, y, data->width, data->height, data->rotation, data->flipX, data->flipY);
+    DrawSprite((int)data->currentFrame, x, y, data->width, data->height, data->rotation, data->flipX, data->flipY);
 }
 
 inline void DrawSpriteDataCustomFrame(SpriteData* data, int x, int y, int frame)

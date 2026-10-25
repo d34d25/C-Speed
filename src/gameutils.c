@@ -355,7 +355,7 @@ void SpawnPowerUp(PowerUpPool* powerups, float x, float y, PowerUpType type)
 
         case PELLET_COUNT_UP: frame = 9; break;
 
-        case DAMAGE_UP: frame = 11; break;
+        case DAMAGE_UP: frame = 10; break;
         
         default: frame = 5; break;
         }

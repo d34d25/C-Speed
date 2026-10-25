@@ -241,6 +241,11 @@ void UpdateEnemyPool(EnemyPool* enemypool, Vector2 playerPos, float dt)
         if(IsPositionOutOfBounds(e->x, e->y, 10.0f) || dead)
         {
             e->alive = false;
+
+            e->x = 1000;
+            e->y = 1000;
+
+            UpdateHitbox(&e->hitbox, e->x, e->y, e->size);
         }
 
         //swap from active to inactive
@@ -277,6 +282,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
         e->x = (float)GetRandomValue(0, NATIVE_SIZE);
         e->y = (float)GetRandomValue(-NATIVE_SIZE, 0);
 
+        UpdateHitbox(&e->hitbox, e->x, e->y, e->size);
+        
         e->alive = true;
 
         e->rotated = false;

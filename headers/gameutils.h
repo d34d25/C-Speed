@@ -59,12 +59,22 @@ inline void DrawSpriteData(SpriteData* data, int x, int y, float dt)
     DrawSprite(data->currentFrame, x, y, data->width, data->height, data->rotation, data->flipX, data->flipY);
 }
 
+inline void DrawSpriteDataCustomFrame(SpriteData* data, int x, int y, int frame)
+{
+    DrawSprite(frame, x, y, data->width, data->height, data->rotation, data->flipX, data->flipY);
+}
+
 inline void UpdateHitbox(Rectangle* rec, float x, float y, float size)
 {
     float halfSize = size * 0.5f;
 
     rec->x = x - halfSize;
     rec->y = y - halfSize;
+}
+
+inline bool IsPositionOutOfBounds(float x, float y, float offset)
+{
+    return y > NATIVE_SIZE + offset || x < -offset || x > NATIVE_SIZE + offset;
 }
 
 typedef struct Bullet
@@ -155,7 +165,7 @@ inline void ClearActiveBullets(BulletPool* bulletpool)
     }
 }
 
-//physics
+//physics / collisions
 
 inline void CollideScreenEdges(Rectangle* rec, float* x, float* y)
 {
@@ -167,5 +177,52 @@ inline void CollideScreenEdges(Rectangle* rec, float* x, float* y)
 
     if(rec->y + rec->height >= NATIVE_SIZE) *y = NATIVE_SIZE - rec->height * 0.5f;
 }
+
+//power ups
+
+typedef enum PowerUpType
+{
+    FIRERATE_UP,
+    PELLET_COUNT_UP,
+    DAMAGE_UP,
+    POWER_UP_TYPE_COUNT
+
+} PowerUpType;
+
+typedef struct PowerUP
+{
+    SpriteData spriteData;
+
+    PowerUpType type;
+
+    float radius;
+
+    float speed;
+
+    float x;
+    float y;
+
+    bool alive;
+
+} PowerUP;
+
+void InitPowerUp(PowerUP* powerUP);
+
+typedef struct PowerUpPool
+{
+    //same size as bullets
+    PowerUP powerUpPool[128];
+
+    PowerUP* activePowerUps[128];
+
+    PowerUP* inactivePowerUps[128];
+
+} PowerUpPool;
+
+void InitPowerUpPool(PowerUpPool* powerups);
+
+void UpdatePowerUPPool(PowerUpPool* powerups, float dt);
+
+void SpawnPowerUp(PowerUpPool* powerups, float x, float y, PowerUpType type);
 
 #endif

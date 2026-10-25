@@ -3,6 +3,20 @@
 
 #include "gameutils.h"
 
+extern float playerBaseFirerate;
+
+extern float playerBaseSpread;
+
+extern float playerBaseDamage;
+
+extern int playerBasePelletCount;
+
+extern int maxPelletCount;
+
+extern float maxFireRate;
+
+extern float maxSpread;
+
 typedef struct Player
 {
     BulletPool bulletPool;
@@ -17,6 +31,16 @@ typedef struct Player
     float y;
 
     float speed;
+
+    float damage;
+
+    float powerUpMaxTime;
+
+    float fireRatePowerUpTimer;
+
+    float pelletCountPowerUpTimer;
+
+    float damagePowerUpTimer;
 
     bool movingRight;
     bool movingLeft;

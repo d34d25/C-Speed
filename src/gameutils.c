@@ -140,7 +140,7 @@ void UpdateBulletPool(BulletPool* bulletpool, float dt)
         b->x += b->speed * b->xDir * dt;
         b->y += b->speed * b->yDir * dt;
 
-        if(b->currentTime >= b->maxTime) b->alive = false;
+        if(b->currentTime >= b->maxTime || IsPositionOutOfBounds(b->x, b->y, -b->radius)) b->alive = false;
 
         //check if dead and swap if so
         if(!b->alive)
@@ -248,5 +248,122 @@ void FireBullet(
             
             SpawnBullet(bulletpool, x, y, speed, newX, newY, rotateSprite);
         }
+    }
+}
+
+void InitPowerUp(PowerUP * powerUP)
+{
+    powerUP->alive = false;
+
+    powerUP->speed = 10.0f;
+
+    powerUP->x = 0.0f;
+    powerUP->y = 0.0f;
+
+    powerUP->radius = 1.5f;
+
+    powerUP->type = FIRERATE_UP;
+
+    SpriteData* sprite = &powerUP->spriteData;
+
+    sprite->animationSpeed = 0.0f;
+    
+    sprite->flipX = false;
+    sprite->flipY = false;
+
+    sprite->currentFrame = 5;
+
+    sprite->frameStart = 5;
+    sprite->frameEnd = 5;
+
+    sprite->width = 8;
+    sprite->height = 8;
+
+    sprite->rotation = 0.0f;
+}
+
+void InitPowerUpPool(PowerUpPool *powerups)
+{
+    for(int i = 0; i < BULLET_POOL_SIZE; i++)
+    {
+        InitPowerUp(&powerups->powerUpPool[i]);
+
+        powerups->inactivePowerUps[i] = &powerups->powerUpPool[i];
+
+        powerups->activePowerUps[i] = NULL;
+    }
+}
+
+void UpdatePowerUPPool(PowerUpPool *powerups, float dt)
+{
+    for(int i = 0; i < BULLET_POOL_SIZE; i++)
+    {
+        PowerUP* p = powerups->activePowerUps[i];
+
+        if(!p) continue;
+
+        p->y += p->speed * dt;
+
+        if(IsPositionOutOfBounds(p->x, p->y, -p->radius))
+        {
+            p->alive = false;
+        }
+
+        if(!p->alive)
+        {
+            powerups->inactivePowerUps[i] = p;
+
+            powerups->activePowerUps[i] = NULL;
+        }
+    }
+}
+
+void SpawnPowerUp(PowerUpPool* powerups, float x, float y, PowerUpType type)
+{
+    PowerUP* p;
+
+    int powerUpIndex = 0;
+
+    for(int i = 0; i < BULLET_POOL_SIZE; i++)
+    {
+        PowerUP* currentPowerUp = powerups->inactivePowerUps[i];
+
+        if(currentPowerUp == NULL) continue;
+        else
+        {
+            p = currentPowerUp;
+            powerUpIndex = i;
+        }
+    }
+
+    if(p != NULL && powerUpIndex > 0 && powerUpIndex < BULLET_POOL_SIZE)
+    {
+        p->x = x;
+        p->y = y;
+
+        p->type = type;
+
+        p->alive = true;
+
+        SpriteData* sprite = &p->spriteData;
+
+        int frame;
+
+        switch (p->type)
+        {
+        case FIRERATE_UP: frame = 8; break;
+
+        case PELLET_COUNT_UP: frame = 9; break;
+
+        case DAMAGE_UP: frame = 11; break;
+        
+        default: frame = 5; break;
+        }
+
+        sprite->currentFrame = frame;
+
+        powerups->activePowerUps[powerUpIndex] = p;
+
+        powerups->inactivePowerUps[powerUpIndex] = NULL;
     }
 }

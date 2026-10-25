@@ -1,5 +1,4 @@
 #include "../headers/enemy.h"
-#include "enemy.h"
 
 const int ENEMY_POOL_SIZE = 60;
 
@@ -17,6 +16,10 @@ void InitEnemy(Enemy *enemy)
     enemy->rotated = false;
 
     enemy->divedIntoPlayer = false;
+
+    ResetEnemyFlags(enemy);
+
+    enemy->health = 100.0f;
 
     enemy->type = ASTEROID;
 
@@ -232,7 +235,10 @@ void UpdateEnemyPool(EnemyPool* enemypool, Vector2 playerPos, float dt)
         UpdateEnemy(e, playerPos, dt);
 
         //bound checking
-        if(e->y > NATIVE_SIZE + 10 || e->x < -10 || e->x > NATIVE_SIZE + 10)
+
+        bool dead = e->health <= 0.0f;
+
+        if(IsPositionOutOfBounds(e->x, e->y, 10.0f) || dead)
         {
             e->alive = false;
         }
@@ -277,6 +283,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
 
         e->divedIntoPlayer = false;
 
+        ResetEnemyFlags(e);
+
         e->type = type;
 
         e->speedX = 0.0f;
@@ -304,6 +312,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
             e->baseSpeedX = 40.0f;
 
             frame = 1;
+
+            e->health = 25.0f;
         }
         break;
 
@@ -327,6 +337,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
             e->speedX = e->baseSpeedX;
             
             frame = 2;
+
+            e->health = 25.0f;
         }
         break;
 
@@ -341,6 +353,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
             e->baseSpeedX = 70.0f;
 
             frame = 3;
+
+            e->health = 25.0f;
         }
         break;
 
@@ -355,6 +369,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
             e->baseSpeedX = 0.0f;
 
             frame = 4;
+
+            e->health = 50.0f;
         }
         break;
 
@@ -369,6 +385,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
             e->baseSpeedX = 0.0f;
 
             frame = 5;
+
+            e->health = 100.0f;
         }
         break;
         
@@ -383,6 +401,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
             e->baseSpeedX = 0.0f;
 
             frame = 5;
+
+            e->health = 25.0f;
         } 
         break;
         }

@@ -25,6 +25,8 @@ typedef struct Enemy
 
     EnemyType type;
 
+    float health;
+
     float size;
 
     float x;
@@ -42,11 +44,25 @@ typedef struct Enemy
 
     bool divedIntoPlayer;
 
+    bool isReceivingDamage;
+    bool recievedDamage;
+
 } Enemy;
 
 void InitEnemy(Enemy* enemy);
 
 void UpdateEnemy(Enemy* enemy, Vector2 playerPos, float dt);
+
+inline void ResetEnemyFlags(Enemy* enemy)
+{
+    enemy->isReceivingDamage = false;
+    enemy->recievedDamage = false;
+}
+
+inline void UpdateEnemyFlags(Enemy* enemy)
+{
+    enemy->recievedDamage = enemy->isReceivingDamage;
+}
 
 //enemy pool
 

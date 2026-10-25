@@ -1,5 +1,19 @@
 #include "../headers/player.h"
 
+float playerBaseFirerate = 0.4f;
+
+float playerBaseSpread = 0.0f;
+
+float playerBaseDamage = 25.0f;
+
+int playerBasePelletCount = 1;
+
+int maxPelletCount = 8;
+
+float maxFireRate = 0.15f;
+
+float maxSpread = 0.8f;
+
 void InitPlayer(Player* player)
 {
     player->x = NATIVE_SIZE * 0.5f;
@@ -23,7 +37,15 @@ void InitPlayer(Player* player)
     player->hitbox.width = player->size;
     player->hitbox.height = player->size;
 
-    InitBulletPool(&player->bulletPool, 0.15f, 3, 0.05f, 1.5f, 6);
+    player->damage = 25.0f;
+
+    player->powerUpMaxTime = 30.0f;
+
+    player->fireRatePowerUpTimer = player->powerUpMaxTime;
+
+    //InitBulletPool(&player->bulletPool, 0.15f, 3, 0.05f, 1.5f, 6);
+
+    InitBulletPool(&player->bulletPool, playerBaseFirerate, playerBasePelletCount, playerBaseSpread, 1.5f, 6);
 
     SpriteData* sprite = &player->spriteData;
 
@@ -96,4 +118,39 @@ void UpdatePlayer(Player *player, float dt)
     player->y += finalSpeed.y;
 
     UpdateHitbox(&player->hitbox, player->x, player->y, player->size);
+
+    player->bulletPool.spread = Clamp(player->bulletPool.spread, 0.0f, maxSpread);
+
+    player->bulletPool.pelletCount = Clamp((float)player->bulletPool.pelletCount, 0.0f, (float)maxPelletCount);
+
+    player->bulletPool.firerate = Clamp(player->bulletPool.firerate, maxFireRate, playerBaseFirerate);
+
+    player->damage = Clamp(player->damage, 0.0f, 100.0f);
+
+    player->fireRatePowerUpTimer += dt;
+
+    player->pelletCountPowerUpTimer += dt;
+
+    player->damagePowerUpTimer += dt;
+
+    if(player->fireRatePowerUpTimer >= player->powerUpMaxTime)
+    {
+        player->fireRatePowerUpTimer = player->powerUpMaxTime;
+
+        player->bulletPool.firerate = playerBaseFirerate;
+    }
+
+    if(player->pelletCountPowerUpTimer >= player->powerUpMaxTime)
+    {
+        player->bulletPool.spread = playerBaseSpread;;
+
+        player->bulletPool.pelletCount = playerBasePelletCount;
+    }
+
+    if(player->damagePowerUpTimer >= player->powerUpMaxTime)
+    {
+        player->damage = playerBaseDamage;
+    }
+
+    printf("player fire rate: %f \n", player->bulletPool.firerate);
 }

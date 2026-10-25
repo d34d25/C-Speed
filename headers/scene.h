@@ -13,6 +13,8 @@ typedef struct Scene
 
     BulletPool backgroundStars;
 
+    PowerUpPool powerUps;
+
 } Scene;
 
 void InitScene(Scene* scene);

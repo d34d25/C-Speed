@@ -9,10 +9,34 @@ void InitScene(Scene *scene)
     InitBulletPool(&scene->backgroundStars, 0.5f, 1, 0.0f, 15.0f, 11);
 
     InitPowerUpPool(&scene->powerUps);
+
+    for(int i = 0; i < 10; i++)
+    {
+        SpawnBullet(
+            &scene->backgroundStars,
+            (float)GetRandomValue(0, NATIVE_SIZE),
+            (float)GetRandomValue(-NATIVE_SIZE, NATIVE_SIZE),
+            60.0f,
+            0.0f,
+            1.0f,
+            false
+        );
+    }
+
+    scene->timer = 0.0f;
+
+    scene->frameCounter = 0;
 }
 
 void UpdateScene(Scene *scene, float dt)
 {
+    scene->frameCounter++;
+
+    if(scene->frameCounter >= 4) scene->frameCounter = 0;
+
+    scene->timer += dt;
+
+    ResetPlayerFlags(&scene->player);
 
     for(int e = 0; e < ENEMY_POOL_SIZE; e++)
     {
@@ -109,6 +133,14 @@ void UpdateScene(Scene *scene, float dt)
         {
             Enemy* activeEnemy = scene->enemyPool.activeEnemies[e];
             
+            if(activeEnemy)
+            {
+                if(CheckCollisionRecs(scene->player.hitbox, activeEnemy->hitbox))
+                {
+                    scene->player.hit = true;
+                }
+            }
+
             if(playerBullet && activeEnemy)
             {
                 if(CheckCollisionCircleRec(
@@ -119,7 +151,7 @@ void UpdateScene(Scene *scene, float dt)
                 {
                     playerBullet->alive = false;
 
-                    activeEnemy->isReceivingDamage = true;
+                    activeEnemy->hit = true;
                 }
             }
 
@@ -134,12 +166,14 @@ void UpdateScene(Scene *scene, float dt)
                 ))
                 {
                     enemyBullet->alive = false;
+
+                    scene->player.hit = true;
                 }
             }
 
             if(!activeEnemy) continue;
 
-            if(!activeEnemy->recievedDamage && activeEnemy->isReceivingDamage)
+            if(!activeEnemy->wasHit && activeEnemy->hit)
             {
                 activeEnemy->health -= scene->player.damage;
 
@@ -147,7 +181,7 @@ void UpdateScene(Scene *scene, float dt)
                 {
                     int powerUpSpawnChance = GetRandomValue(0, 100);
 
-                    if(powerUpSpawnChance <= 30)
+                    if(powerUpSpawnChance <= 20)
                     {
                         int powerUpType = GetRandomValue(0, POWER_UP_TYPE_COUNT - 1);
 
@@ -159,6 +193,17 @@ void UpdateScene(Scene *scene, float dt)
             UpdateEnemyFlags(activeEnemy);
         }
     }
+
+    if(!scene->player.wasHit && scene->player.hit && scene->player.invulTimer >= scene->player.maxInvulTimer)
+    {
+        scene->player.lives--;
+
+        scene->player.invulTimer = 0.0f;
+
+        if(scene->player.lives <= 0) scene->player.lives = 0;
+    }
+
+    UpdatePlayerFlags(&scene->player);
 }
 
 void DrawScene(Scene *scene, float dt)
@@ -203,5 +248,14 @@ void DrawScene(Scene *scene, float dt)
         if(p) DrawSpriteData(&p->spriteData, p->x, p->y, dt);
     }
 
-    DrawSpriteData(&scene->player.spriteData, scene->player.x, scene->player.y, dt);
+    if(scene->player.invulTimer < scene->player.maxInvulTimer)
+    {
+        if(scene->frameCounter % 4 == 0) DrawSpriteData(&scene->player.spriteData, scene->player.x, scene->player.y, dt);
+    }
+    else
+    {
+        DrawSpriteData(&scene->player.spriteData, scene->player.x, scene->player.y, dt);
+    }
+
+    DrawText(TextFormat("Time: %i", (int)scene->timer), NATIVE_SIZE - 40, 1, 1, WHITE);
 }

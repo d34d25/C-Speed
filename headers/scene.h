@@ -15,6 +15,10 @@ typedef struct Scene
 
     PowerUpPool powerUps;
 
+    float timer;
+
+    int frameCounter;
+
 } Scene;
 
 void InitScene(Scene* scene);

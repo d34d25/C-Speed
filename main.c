@@ -21,11 +21,12 @@ int main(void)
     {
         float dt = GetFrameTime();
 
-        UpdateScene(&scene, dt);
+        if(scene.player.lives > 0) UpdateScene(&scene, dt);
 
         BeginTextureMode(canvas);
         
-        DrawScene(&scene, dt);
+        if(scene.player.lives > 0) DrawScene(&scene, dt);
+        else DrawText("Game Over", 40, 50, 1, WHITE);
 
         EndTextureMode();
 

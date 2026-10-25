@@ -16,6 +16,11 @@ float maxSpread = 0.8f;
 
 void InitPlayer(Player* player)
 {
+    player->lives = 3;
+
+    player->hit = false;
+    player->wasHit = false;
+
     player->x = NATIVE_SIZE * 0.5f;
     player->y = NATIVE_SIZE * 0.8f;
 
@@ -39,9 +44,13 @@ void InitPlayer(Player* player)
 
     player->damage = 25.0f;
 
-    player->powerUpMaxTime = 30.0f;
+    player->powerUpMaxTime = 10.0f;
 
     player->fireRatePowerUpTimer = player->powerUpMaxTime;
+
+    player->maxInvulTimer = 1.5f;
+
+    player->invulTimer = player->maxInvulTimer;
 
     //InitBulletPool(&player->bulletPool, 0.15f, 3, 0.05f, 1.5f, 6);
 
@@ -152,5 +161,7 @@ void UpdatePlayer(Player *player, float dt)
         player->damage = playerBaseDamage;
     }
 
-    printf("player fire rate: %f \n", player->bulletPool.firerate);
+    player->invulTimer += dt;
+
+    if(player->invulTimer >= player->maxInvulTimer) player->invulTimer = player->maxInvulTimer;
 }

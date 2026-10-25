@@ -44,8 +44,8 @@ typedef struct Enemy
 
     bool divedIntoPlayer;
 
-    bool isReceivingDamage;
-    bool recievedDamage;
+    bool hit;
+    bool wasHit;
 
 } Enemy;
 
@@ -55,13 +55,13 @@ void UpdateEnemy(Enemy* enemy, Vector2 playerPos, float dt);
 
 inline void ResetEnemyFlags(Enemy* enemy)
 {
-    enemy->isReceivingDamage = false;
-    enemy->recievedDamage = false;
+    enemy->hit = false;
+    enemy->wasHit = false;
 }
 
 inline void UpdateEnemyFlags(Enemy* enemy)
 {
-    enemy->recievedDamage = enemy->isReceivingDamage;
+    enemy->wasHit = enemy->hit;
 }
 
 //enemy pool

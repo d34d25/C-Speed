@@ -42,6 +42,12 @@ typedef struct Player
 
     float damagePowerUpTimer;
 
+    float maxInvulTimer;
+
+    float invulTimer;
+
+    int lives;
+
     bool movingRight;
     bool movingLeft;
 
@@ -49,6 +55,9 @@ typedef struct Player
     bool movingDown;
 
     bool shooting;
+
+    bool hit;
+    bool wasHit;
     
 } Player;
 
@@ -57,5 +66,16 @@ void InitPlayer(Player* player);
 void UpdatePlayerInput(Player* player);
 
 void UpdatePlayer(Player* player, float dt);
+
+inline void ResetPlayerFlags(Player* player)
+{
+    player->hit = false;
+    player->wasHit = false;
+};
+
+inline void UpdatePlayerFlags(Player* player)
+{
+    player->wasHit = player->hit;
+}
 
 #endif

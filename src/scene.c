@@ -173,9 +173,11 @@ void UpdateScene(Scene *scene, float dt)
 
             if(!activeEnemy) continue;
 
-            if(!activeEnemy->wasHit && activeEnemy->hit)
+            if(!activeEnemy->wasHit && activeEnemy->hit && activeEnemy->invulTimer >= MAX_ENEMY_INVUL_TIMER)
             {
                 activeEnemy->health -= scene->player.damage;
+
+                activeEnemy->invulTimer = 0.0f;
 
                 if(activeEnemy->health <= 0.0f)
                 {
@@ -216,7 +218,17 @@ void DrawScene(Scene *scene, float dt)
 
         Enemy* e = scene->enemyPool.activeEnemies[i];
 
-        if(e) DrawSpriteData(&e->spriteData, e->x, e->y, dt);
+        if(e)
+        {
+            if(e->invulTimer < MAX_ENEMY_INVUL_TIMER)
+            {
+                if(scene->frameCounter % 2 == 0) DrawSpriteData(&e->spriteData, e->x, e->y, dt);
+            }
+            else
+            {
+                DrawSpriteData(&e->spriteData, e->x, e->y, dt);
+            }
+        }
 
         for(int a = 0; a < BULLET_POOL_SIZE; a++)
         {
@@ -258,4 +270,9 @@ void DrawScene(Scene *scene, float dt)
     }
 
     DrawText(TextFormat("Time: %i", (int)scene->timer), NATIVE_SIZE - 40, 1, 1, WHITE);
+
+    for(int i = 1; i <= scene->player.lives; i++)
+    {
+        DrawSprite(0, 8 * i, 8 * 1, 8, 8, 0, false, true);
+    }
 }

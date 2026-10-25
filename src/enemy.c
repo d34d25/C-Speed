@@ -2,6 +2,8 @@
 
 const int ENEMY_POOL_SIZE = 60;
 
+const float MAX_ENEMY_INVUL_TIMER = 0.25f;
+
 void InitEnemy(Enemy *enemy)
 {
     enemy->x = 0.0f;
@@ -30,6 +32,8 @@ void InitEnemy(Enemy *enemy)
 
     enemy->hitbox.width = enemy->size;
     enemy->hitbox.height = enemy->size;
+
+    enemy->invulTimer = MAX_ENEMY_INVUL_TIMER;
 
     InitBulletPool(&enemy->bulletPool, 0.0f, 0.0f, 0.0f, 3.0f, 7);
 
@@ -201,6 +205,10 @@ void UpdateEnemy(Enemy* enemy, Vector2 playerPos, float dt)
     enemy->y += enemy->speedY * dt;
 
     UpdateHitbox(&enemy->hitbox, enemy->x, enemy->y, enemy->size);
+
+    enemy->invulTimer += dt;
+
+    if(enemy->invulTimer >= MAX_ENEMY_INVUL_TIMER) enemy->invulTimer = MAX_ENEMY_INVUL_TIMER;
 }
 
 void InitEnemyPool(EnemyPool *enemypool, float firerate)
@@ -296,6 +304,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
 
         e->speedX = 0.0f;
         e->speedY = 0.0f;
+
+        e->invulTimer = MAX_ENEMY_INVUL_TIMER;
 
         float firerate;
         float spread;

@@ -15,6 +15,8 @@ typedef enum EnemyType
 
 } EnemyType;
 
+extern const float MAX_ENEMY_INVUL_TIMER;
+
 typedef struct Enemy
 {
     BulletPool bulletPool;
@@ -37,6 +39,8 @@ typedef struct Enemy
 
     float speedX;
     float speedY;
+
+    float invulTimer;
 
     bool rotated;
 

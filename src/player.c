@@ -163,14 +163,22 @@ void UpdatePlayer(Player *player, float dt)
 
     if(player->invulTimer >= player->maxInvulTimer) player->invulTimer = player->maxInvulTimer;
 
-    if(!IsPlayerAlive(player))
+    if(!IsPlayerAlive(player) && !player->dead)
     {
-        if(player->spriteData.currentFrame < 17) player->spriteData.animationSpeed = 15.0f;
-    
+        player->spriteData.animationSpeed = 12.0f;
+
         player->spriteData.frameStart = 11;
 
-        player->spriteData.frameEnd = 17;
+        player->spriteData.frameEnd = 18;
 
-        player->dead = true;
+        if(player->spriteData.currentFrame >= 17.0f) player->dead = true;
     }
+
+    if(player->dead)
+    {
+        player->spriteData.frameStart = 18;
+
+        player->spriteData.frameEnd = 18;
+    }
+
 }

@@ -205,10 +205,6 @@ void UpdateEnemy(Enemy* enemy, Vector2 playerPos, float dt)
     enemy->y += enemy->speedY * dt;
 
     UpdateHitbox(&enemy->hitbox, enemy->x, enemy->y, enemy->size);
-
-    enemy->invulTimer += dt;
-
-    if(enemy->invulTimer >= MAX_ENEMY_INVUL_TIMER) enemy->invulTimer = MAX_ENEMY_INVUL_TIMER;
 }
 
 void InitEnemyPool(EnemyPool *enemypool, float firerate)
@@ -240,11 +236,26 @@ void UpdateEnemyPool(EnemyPool* enemypool, Vector2 playerPos, float dt)
 
         if(!e) continue;
 
-        UpdateEnemy(e, playerPos, dt);
+        if(IsEnemyAlive(e)) UpdateEnemy(e, playerPos, dt);
+
+        e->invulTimer += dt;
+
+        if(e->invulTimer >= MAX_ENEMY_INVUL_TIMER) e->invulTimer = MAX_ENEMY_INVUL_TIMER;
 
         //bound checking
 
-        bool dead = e->health <= 0.0f;
+        bool dead = false;
+
+        if(!IsEnemyAlive(e))
+        {
+            e->spriteData.animationSpeed = 12.0f;
+
+            e->spriteData.frameStart = 11;
+
+            e->spriteData.frameEnd = 14;
+
+            if(e->spriteData.currentFrame >= 13) dead = true;
+        }
 
         if(IsPositionOutOfBounds(e->x, e->y, 10.0f) || dead)
         {
@@ -433,6 +444,8 @@ void SpawnEnemy(EnemyPool* enemypool, EnemyType type)
 
         sprite->flipX = false;
         sprite->flipY = false;
+
+        sprite->animationSpeed = 0.0f;
 
         BulletPool* enemyBulletPool = &e->bulletPool;
 

@@ -55,9 +55,9 @@ inline void DrawSpriteData(SpriteData* data, int x, int y, float dt)
     {
         data->currentFrame += data->animationSpeed * dt;
 
-        if(data->currentFrame < data->frameStart) data->currentFrame = data->frameEnd;
+        if(data->currentFrame <= data->frameStart) data->currentFrame = data->frameEnd;
 
-        if(data->currentFrame > data->frameEnd) data->currentFrame = data->frameStart;
+        if(data->currentFrame >= data->frameEnd) data->currentFrame = data->frameStart;
     }
 
     DrawSprite((int)data->currentFrame, x, y, data->width, data->height, data->rotation, data->flipX, data->flipY);

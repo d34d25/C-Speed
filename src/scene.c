@@ -134,7 +134,7 @@ void UpdateScene(Scene *scene, float dt)
             
             if(activeEnemy)
             {
-                if(CheckCollisionRecs(scene->player.hitbox, activeEnemy->hitbox))
+                if(CheckCollisionRecs(scene->player.hitbox, activeEnemy->hitbox) && IsEnemyAlive(activeEnemy))
                 {
                     scene->player.hit = true;
                 }
@@ -146,7 +146,7 @@ void UpdateScene(Scene *scene, float dt)
                 (Vector2){playerBullet->x, playerBullet->y},
                 playerBullet->radius,
                 activeEnemy->hitbox
-                ))
+                ) && IsEnemyAlive(activeEnemy))
                 {
                     playerBullet->alive = false;
 

@@ -23,10 +23,7 @@ int main(void)
 
         UpdateScene(&scene, dt);
 
-        if(scene.gameover)
-        {
-            if(IsKeyPressed(KEY_R)) InitScene(&scene);
-        }
+        if(IsKeyPressed(KEY_R)) InitScene(&scene);
 
         TickSceneCouner(&scene);
 

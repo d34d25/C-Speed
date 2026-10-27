@@ -8,4 +8,4 @@ cd raylib/src/
 make PLATFORM=PLATFORM_WEB && 
 mv libraylib.web.a ../../lib && 
 cp raylib.h rlgl.h raymath.h rcamera.h ../../headers/raylib/ &&
-echo "raylib web sucessfully installed in current project"
+echo "raylib web successfully installed in current project"

@@ -71,7 +71,7 @@ var ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIR
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
-// include: /tmp/nix-shell.GELwsu/tmpekggxg2x.js
+// include: /tmp/nix-shell.uScpPe/tmpazz9o80g.js
 
   if (!Module['expectedDataFileDownloads']) Module['expectedDataFileDownloads'] = 0;
   Module['expectedDataFileDownloads']++;
@@ -200,25 +200,25 @@ Module['FS_createPath']("/", "assets", true, true);
     }
 
     }
-    loadPackage({"files": [{"filename": "/assets/testspriteatlas.png", "start": 0, "end": 628}], "remote_package_size": 628});
+    loadPackage({"files": [{"filename": "/assets/testspriteatlas.png", "start": 0, "end": 628}, {"filename": "/assets/title.png", "start": 628, "end": 1560}], "remote_package_size": 1560});
 
   })();
 
-// end include: /tmp/nix-shell.GELwsu/tmpekggxg2x.js
-// include: /tmp/nix-shell.GELwsu/tmpdsta21z_.js
+// end include: /tmp/nix-shell.uScpPe/tmpazz9o80g.js
+// include: /tmp/nix-shell.uScpPe/tmphoz79xzw.js
 
     // All the pre-js content up to here must remain later on, we need to run
     // it.
     if ((typeof ENVIRONMENT_IS_WASM_WORKER != 'undefined' && ENVIRONMENT_IS_WASM_WORKER) || (typeof ENVIRONMENT_IS_PTHREAD != 'undefined' && ENVIRONMENT_IS_PTHREAD) || (typeof ENVIRONMENT_IS_AUDIO_WORKLET != 'undefined' && ENVIRONMENT_IS_AUDIO_WORKLET)) Module['preRun'] = [];
     var necessaryPreJSTasks = Module['preRun'].slice();
-  // end include: /tmp/nix-shell.GELwsu/tmpdsta21z_.js
-// include: /tmp/nix-shell.GELwsu/tmpooryu7k0.js
+  // end include: /tmp/nix-shell.uScpPe/tmphoz79xzw.js
+// include: /tmp/nix-shell.uScpPe/tmpg6t4anxy.js
 
     if (!Module['preRun']) throw 'Module.preRun should exist because file support used it; did a pre-js delete it?';
     necessaryPreJSTasks.forEach((task) => {
       if (Module['preRun'].indexOf(task) < 0) throw 'All preRun tasks that exist before user pre-js code should remain after; did you replace Module or modify Module.preRun?';
     });
-  // end include: /tmp/nix-shell.GELwsu/tmpooryu7k0.js
+  // end include: /tmp/nix-shell.uScpPe/tmpg6t4anxy.js
 
 
 var arguments_ = [];
@@ -8974,49 +8974,49 @@ function checkIncomingModuleAPI() {
   ignoredModuleProp('onSbrkGrow');
 }
 var ASM_CONSTS = {
-  89702: () => { if (document.fullscreenElement) return 1; },  
- 89748: () => { return Module.canvas.width; },  
- 89780: () => { return parseInt(Module.canvas.style.width); },  
- 89828: () => { document.exitFullscreen(); },  
- 89855: () => { setTimeout(function(){ Module.requestFullscreen(false, false); }, 100); },  
- 89927: () => { if (document.fullscreenElement) return 1; },  
- 89973: () => { return Module.canvas.width; },  
- 90005: () => { return screen.width; },  
- 90030: () => { document.exitFullscreen(); },  
- 90057: ($0) => { const canvasId = UTF8ToString($0); setTimeout(function() { Module.requestFullscreen(false, true); setTimeout(function() { document.querySelector(canvasId).style.width="unset"; }, 100); }, 100); },  
- 90251: () => { return window.innerWidth; },  
- 90277: () => { return window.innerHeight; },  
- 90304: () => { if (document.fullscreenElement) return 1; },  
- 90350: () => { return Module.canvas.width; },  
- 90382: () => { return parseInt(Module.canvas.style.width); },  
- 90430: () => { if (document.fullscreenElement) return 1; },  
- 90476: () => { return Module.canvas.width; },  
- 90508: () => { return screen.width; },  
- 90533: () => { return window.innerWidth; },  
- 90559: () => { return window.innerHeight; },  
- 90586: () => { if (document.fullscreenElement) return 1; },  
- 90632: () => { return Module.canvas.width; },  
- 90664: () => { return screen.width; },  
- 90689: () => { document.exitFullscreen(); },  
- 90716: () => { if (document.fullscreenElement) return 1; },  
- 90762: () => { return Module.canvas.width; },  
- 90794: () => { return parseInt(Module.canvas.style.width); },  
- 90842: () => { document.exitFullscreen(); },  
- 90869: ($0) => { Module.canvas.style.opacity = $0; },  
- 90907: () => { return screen.width; },  
- 90932: () => { return screen.height; },  
- 90958: () => { return window.screenX; },  
- 90985: () => { return window.screenY; },  
- 91012: () => { return window.devicePixelRatio; },  
- 91048: ($0) => { navigator.clipboard.writeText(UTF8ToString($0)); },  
- 91101: ($0) => { Module.canvas.style.cursor = UTF8ToString($0); },  
- 91152: () => { Module.canvas.style.cursor = 'none'; },  
- 91189: ($0, $1, $2, $3) => { try { navigator.getGamepads()[$0].vibrationActuator.playEffect('dual-rumble', { startDelay: 0, duration: $3, weakMagnitude: $1, strongMagnitude: $2 }); } catch (e) { try { navigator.getGamepads()[$0].hapticActuators[0].pulse($2, $3); } catch (e) { } } },  
- 91445: ($0) => { Module.canvas.style.cursor = UTF8ToString($0); },  
- 91496: () => { if (document.pointerLockElement) return 1; },  
- 91543: () => { if (document.fullscreenElement) return 1; },  
- 91589: () => { return window.innerWidth; },  
- 91615: () => { return window.innerHeight; }
+  89750: () => { if (document.fullscreenElement) return 1; },  
+ 89796: () => { return Module.canvas.width; },  
+ 89828: () => { return parseInt(Module.canvas.style.width); },  
+ 89876: () => { document.exitFullscreen(); },  
+ 89903: () => { setTimeout(function(){ Module.requestFullscreen(false, false); }, 100); },  
+ 89975: () => { if (document.fullscreenElement) return 1; },  
+ 90021: () => { return Module.canvas.width; },  
+ 90053: () => { return screen.width; },  
+ 90078: () => { document.exitFullscreen(); },  
+ 90105: ($0) => { const canvasId = UTF8ToString($0); setTimeout(function() { Module.requestFullscreen(false, true); setTimeout(function() { document.querySelector(canvasId).style.width="unset"; }, 100); }, 100); },  
+ 90299: () => { return window.innerWidth; },  
+ 90325: () => { return window.innerHeight; },  
+ 90352: () => { if (document.fullscreenElement) return 1; },  
+ 90398: () => { return Module.canvas.width; },  
+ 90430: () => { return parseInt(Module.canvas.style.width); },  
+ 90478: () => { if (document.fullscreenElement) return 1; },  
+ 90524: () => { return Module.canvas.width; },  
+ 90556: () => { return screen.width; },  
+ 90581: () => { return window.innerWidth; },  
+ 90607: () => { return window.innerHeight; },  
+ 90634: () => { if (document.fullscreenElement) return 1; },  
+ 90680: () => { return Module.canvas.width; },  
+ 90712: () => { return screen.width; },  
+ 90737: () => { document.exitFullscreen(); },  
+ 90764: () => { if (document.fullscreenElement) return 1; },  
+ 90810: () => { return Module.canvas.width; },  
+ 90842: () => { return parseInt(Module.canvas.style.width); },  
+ 90890: () => { document.exitFullscreen(); },  
+ 90917: ($0) => { Module.canvas.style.opacity = $0; },  
+ 90955: () => { return screen.width; },  
+ 90980: () => { return screen.height; },  
+ 91006: () => { return window.screenX; },  
+ 91033: () => { return window.screenY; },  
+ 91060: () => { return window.devicePixelRatio; },  
+ 91096: ($0) => { navigator.clipboard.writeText(UTF8ToString($0)); },  
+ 91149: ($0) => { Module.canvas.style.cursor = UTF8ToString($0); },  
+ 91200: () => { Module.canvas.style.cursor = 'none'; },  
+ 91237: ($0, $1, $2, $3) => { try { navigator.getGamepads()[$0].vibrationActuator.playEffect('dual-rumble', { startDelay: 0, duration: $3, weakMagnitude: $1, strongMagnitude: $2 }); } catch (e) { try { navigator.getGamepads()[$0].hapticActuators[0].pulse($2, $3); } catch (e) { } } },  
+ 91493: ($0) => { Module.canvas.style.cursor = UTF8ToString($0); },  
+ 91544: () => { if (document.pointerLockElement) return 1; },  
+ 91591: () => { if (document.fullscreenElement) return 1; },  
+ 91637: () => { return window.innerWidth; },  
+ 91663: () => { return window.innerHeight; }
 };
 function SetCanvasIdJs(out,outSize) { var canvasId = "#" + Module.canvas.id; stringToUTF8(canvasId, out, outSize); }
 function __asyncjs__RequestClipboardData() { return Asyncify.handleAsync(async () => { if (navigator.clipboard && window.isSecureContext) { let items = await navigator.clipboard.read(); for (const item of items) { if (item.types.includes("text/plain")) { const blob = await item.getType("text/plain"); const text = await blob.text(); window._lastClipboardString = text; } else if (item.types.find(t => t.startsWith("image/"))) { const blob = await item.getType(item.types.find(t => t.startsWith("image/"))); const bitmap = await createImageBitmap(blob); const canvas = document.createElement('canvas'); canvas.width = bitmap.width; canvas.height = bitmap.height; const ctx = canvas.getContext('2d'); ctx.drawImage(bitmap, 0, 0); const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height).data; window._lastImgWidth = canvas.width; window._lastImgHeight = canvas.height; window._lastImgData = imgData; } } } else console.warn("Clipboard read() requires HTTPS/Localhost"); }); }

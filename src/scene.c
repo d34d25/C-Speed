@@ -28,10 +28,37 @@ void InitScene(Scene *scene)
     scene->frameCounter = 0;
 
     scene->gameover = false;
+
+    scene->inTitle = true;
+
+    Image titleImage = LoadImage("assets/title.png");
+
+    scene->titleTexture = LoadTextureFromImage(titleImage);
+
+    UnloadImage(titleImage);
 }
 
 void UpdateScene(Scene *scene, float dt)
 {
+    UpdateBulletPool(&scene->backgroundStars, dt);
+
+    FireBullet(
+        &scene->backgroundStars,
+        (float)GetRandomValue(0, NATIVE_SIZE),
+        (float)GetRandomValue(-NATIVE_SIZE * 0.5f, 0),
+        60.0f, 
+        0.0f,
+        1.0f,
+        false,
+        true,
+        false,
+        dt
+    );
+
+    if(IsKeyPressed(KEY_ENTER) || IsKeyPressed(KEY_Z)) scene->inTitle = false;
+
+    if(scene->inTitle) return;
+
     if(IsPlayerAlive(&scene->player)) scene->timer += dt;
 
     ResetPlayerFlags(&scene->player);
@@ -47,22 +74,7 @@ void UpdateScene(Scene *scene, float dt)
 
     float maxEnemySpawnRate = 0.001f;
 
-    if(scene->enemyPool.firerate <= maxEnemySpawnRate) scene->enemyPool.firerate = maxEnemySpawnRate;
-
-    UpdateBulletPool(&scene->backgroundStars, dt);
-
-    FireBullet(
-        &scene->backgroundStars,
-        (float)GetRandomValue(0, NATIVE_SIZE),
-        (float)GetRandomValue(-NATIVE_SIZE * 0.5f, 0),
-        60.0f, 
-        0.0f,
-        1.0f,
-        false,
-        true,
-        false,
-        dt
-    );
+    if(scene->enemyPool.firerate <= maxEnemySpawnRate) scene->enemyPool.firerate = maxEnemySpawnRate;    
 
     if(IsPlayerAlive(&scene->player)) UpdatePlayerInput(&scene->player);
     else ResetPlayerInput(&scene->player);
@@ -213,6 +225,43 @@ void DrawScene(Scene *scene, float dt)
 {
     ClearBackground(BLACK);
 
+    DrawRectangleLines(0, 0, NATIVE_SIZE, NATIVE_SIZE, PICO_WHITE);
+
+    if(scene->inTitle)
+    {
+        for(int i = 0; i < BULLET_POOL_SIZE; i++)
+        {
+            Bullet* star = scene->backgroundStars.activeBullets[i];
+
+            if(!star) continue;
+            
+            Color starColor = PICO_WHITE;
+
+            starColor.a = 100;
+
+            DrawRectangle(star->x, star->y, 1, 1, starColor);
+            
+        }
+
+        DrawTexturePro(
+            scene->titleTexture,
+            (Rectangle){0, 0, NATIVE_SIZE, NATIVE_SIZE},
+            (Rectangle){0, 0, NATIVE_SIZE, NATIVE_SIZE},
+            (Vector2){0.0f, 0.0f},
+            0.0f,
+            WHITE
+        );
+
+        if(scene->frameCounter > 60)
+        {
+            DrawText("PRESS ENTER / Z", 17, 90, 1, PICO_WHITE);
+
+            DrawText("TO START", 35, 105, 1, PICO_WHITE);
+        }
+
+        return;
+    }
+
     for(int i = 0; i < ENEMY_POOL_SIZE; i++)
     {
         Enemy* eAll = &scene->enemyPool.enemies[i];
@@ -293,4 +342,9 @@ void TickSceneCounter(Scene *scene)
     scene->frameCounter++;
 
     if(scene->frameCounter >= 120) scene->frameCounter = 0;
+}
+
+void UnloadScene(Scene *scene)
+{
+    UnloadTexture(scene->titleTexture);
 }

@@ -9,6 +9,8 @@ typedef struct Scene
 {
     Player player;
 
+    Texture2D titleTexture;
+
     EnemyPool enemyPool;
 
     BulletPool backgroundStars;
@@ -21,6 +23,8 @@ typedef struct Scene
 
     bool gameover;
 
+    bool inTitle;
+
 } Scene;
 
 void InitScene(Scene* scene);
@@ -30,5 +34,7 @@ void UpdateScene(Scene* scene, float dt);
 void DrawScene(Scene* scene, float dt);
 
 void TickSceneCounter(Scene* scene);
+
+void UnloadScene(Scene* scene);
 
 #endif

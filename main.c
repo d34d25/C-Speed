@@ -67,6 +67,8 @@ int main(void)
 
     #endif
 
+    UnloadScene(&scene);
+
     UnloadAssets();
 
     UnloadRenderTexture(canvas);

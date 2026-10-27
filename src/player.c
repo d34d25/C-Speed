@@ -1,4 +1,4 @@
-#include "../headers/player.h"
+#include "player.h"
 
 float playerBaseFirerate = 0.4f;
 
@@ -181,4 +181,34 @@ void UpdatePlayer(Player *player, float dt)
         player->spriteData.frameEnd = 18;
     }
 
+}
+
+void UpdatePlayerFlags(Player *player)
+{
+    player->wasHit = player->hit;
+}
+
+void ResetPlayerInput(Player *player)
+{
+    player->movingRight = false;
+    player->movingLeft = false;
+
+    player->movingDown = false;
+    player->movingUp = false;
+
+    player->shootingPress = false;
+    player->shooting = false;
+}
+
+bool IsPlayerAlive(Player *player)
+{
+    if(!player) return false;
+
+    return player->lives > 0;
+}
+
+void ResetPlayerFlags(Player *player)
+{
+    player->hit = false;
+    player->wasHit = false;
 }

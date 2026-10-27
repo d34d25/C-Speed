@@ -70,34 +70,12 @@ void UpdatePlayerInput(Player* player);
 
 void UpdatePlayer(Player* player, float dt);
 
-inline void ResetPlayerFlags(Player* player)
-{
-    player->hit = false;
-    player->wasHit = false;
-};
+void UpdatePlayerFlags(Player* player);
 
-inline void UpdatePlayerFlags(Player* player)
-{
-    player->wasHit = player->hit;
-}
+void ResetPlayerInput(Player* player);
 
-inline void ResetPlayerInput(Player* player)
-{
-    player->movingRight = false;
-    player->movingLeft = false;
+void ResetPlayerFlags(Player *player);
 
-    player->movingDown = false;
-    player->movingUp = false;
-
-    player->shootingPress = false;
-    player->shooting = false;
-}
-
-inline bool IsPlayerAlive(Player* player)
-{
-    if(!player) return false;
-
-    return player->lives > 0;
-}
+bool IsPlayerAlive(Player* player);
 
 #endif

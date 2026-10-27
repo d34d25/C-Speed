@@ -57,23 +57,11 @@ void InitEnemy(Enemy* enemy);
 
 void UpdateEnemy(Enemy* enemy, Vector2 playerPos, float dt);
 
-inline bool IsEnemyAlive(Enemy* enemy)
-{
-    if(!enemy) return false;
+bool IsEnemyAlive(Enemy* enemy);
 
-    return enemy->health > 0.0f;
-}
+void ResetEnemyFlags(Enemy* enemy);
 
-inline void ResetEnemyFlags(Enemy* enemy)
-{
-    enemy->hit = false;
-    enemy->wasHit = false;
-}
-
-inline void UpdateEnemyFlags(Enemy* enemy)
-{
-    enemy->wasHit = enemy->hit;
-}
+void UpdateEnemyFlags(Enemy* enemy);
 
 //enemy pool
 

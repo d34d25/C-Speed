@@ -1,7 +1,48 @@
-
 #include "raylib.h"
 
-#include "headers/scene.h"
+#include "scene.h"
+
+#if defined(PLATFORM_WEB)
+    #include <emscripten/emscripten.h>
+#endif
+
+Scene scene;
+
+RenderTexture2D canvas;
+
+void RunGame()
+{
+    float dt = GetFrameTime();
+
+    UpdateScene(&scene, dt);
+
+    if(IsKeyPressed(KEY_R)) InitScene(&scene);
+
+    TickSceneCounter(&scene);
+
+    BeginTextureMode(canvas);
+        
+    DrawScene(&scene, dt);
+
+    EndTextureMode();
+
+    BeginDrawing();
+
+        ClearBackground(GRAY);
+
+        DrawTexturePro(
+            canvas.texture,
+            (Rectangle){0.0f, 0.0f, (float)canvas.texture.width, (float)-canvas.texture.height},
+            (Rectangle){halfScreen, halfScreen, SCREEN_SIZE, SCREEN_SIZE},
+            (Vector2){halfScreen, halfScreen},
+            0.0f,
+            WHITE
+        );
+
+        DrawFPS(10,10);
+
+    EndDrawing();
+}
 
 int main(void)
 {
@@ -9,47 +50,22 @@ int main(void)
 
     SetTargetFPS(60);
 
-    RenderTexture2D canvas = LoadRenderTexture(NATIVE_SIZE, NATIVE_SIZE);
+    canvas = LoadRenderTexture(NATIVE_SIZE, NATIVE_SIZE);
 
-    InitAssets();
-
-    Scene scene;
+    InitAssets();    
 
     InitScene(&scene);
 
+    #if defined(PLATFORM_WEB)
+        emscripten_set_main_loop(RunGame, 0, 1);
+    #else
+
     while (!WindowShouldClose())
     {
-        float dt = GetFrameTime();
-
-        UpdateScene(&scene, dt);
-
-        if(IsKeyPressed(KEY_R)) InitScene(&scene);
-
-        TickSceneCouner(&scene);
-
-        BeginTextureMode(canvas);
-        
-        DrawScene(&scene, dt);
-
-        EndTextureMode();
-
-        BeginDrawing();
-
-            ClearBackground(GRAY);
-
-            DrawTexturePro(
-                canvas.texture,
-                (Rectangle){0.0f, 0.0f, (float)canvas.texture.width, (float)-canvas.texture.height},
-                (Rectangle){halfScreen, halfScreen, SCREEN_SIZE, SCREEN_SIZE},
-                (Vector2){halfScreen, halfScreen},
-                0.0f,
-                WHITE
-            );
-
-            DrawFPS(10,10);
-
-        EndDrawing();
+        RunGame();
     }
+
+    #endif
 
     UnloadAssets();
 

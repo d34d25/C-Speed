@@ -1,4 +1,4 @@
-#include "../headers/scene.h"
+#include "scene.h"
 
 void InitScene(Scene *scene)
 {
@@ -286,4 +286,11 @@ void DrawScene(Scene *scene, float dt)
             DrawText("Prees R to restart", 20, 66, 1, PICO_WHITE);
         }
     }
+}
+
+void TickSceneCounter(Scene *scene)
+{
+    scene->frameCounter++;
+
+    if(scene->frameCounter >= 120) scene->frameCounter = 0;
 }

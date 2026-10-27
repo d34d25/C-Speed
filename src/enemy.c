@@ -1,4 +1,4 @@
-#include "../headers/enemy.h"
+#include "enemy.h"
 
 const int ENEMY_POOL_SIZE = 60;
 
@@ -205,6 +205,24 @@ void UpdateEnemy(Enemy* enemy, Vector2 playerPos, float dt)
     enemy->y += enemy->speedY * dt;
 
     UpdateHitbox(&enemy->hitbox, enemy->x, enemy->y, enemy->size);
+}
+
+bool IsEnemyAlive(Enemy *enemy)
+{
+    if(!enemy) return false;
+
+    return enemy->health > 0.0f;
+}
+
+void ResetEnemyFlags(Enemy *enemy)
+{
+    enemy->hit = false;
+    enemy->wasHit = false;
+}
+
+void UpdateEnemyFlags(Enemy *enemy)
+{
+    enemy->wasHit = enemy->hit;
 }
 
 void InitEnemyPool(EnemyPool *enemypool, float firerate)

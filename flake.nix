@@ -23,6 +23,7 @@
 				gcc
 				gdb
 				python3
+				gnumake
 				#------------
 		
 				libGL

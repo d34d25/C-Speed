@@ -49,37 +49,13 @@ void UnloadAssets();
 
 void DrawSprite(int frame, int posX, int posY, int frameWidth, int frameHeight, float rotation, bool flipX, bool flipY);
 
-inline void DrawSpriteData(SpriteData* data, int x, int y, float dt)
-{
-    if(data->animationSpeed > 0.0f)
-    {
-        data->currentFrame += data->animationSpeed * dt;
+void DrawSpriteData(SpriteData* data, int x, int y, float dt);
 
-        if(data->currentFrame <= data->frameStart) data->currentFrame = data->frameEnd;
+void DrawSpriteDataCustomFrame(SpriteData* data, int x, int y, int frame);
 
-        if(data->currentFrame >= data->frameEnd) data->currentFrame = data->frameStart;
-    }
+void UpdateHitbox(Rectangle* rec, float x, float y, float size);
 
-    DrawSprite((int)data->currentFrame, x, y, data->width, data->height, data->rotation, data->flipX, data->flipY);
-}
-
-inline void DrawSpriteDataCustomFrame(SpriteData* data, int x, int y, int frame)
-{
-    DrawSprite(frame, x, y, data->width, data->height, data->rotation, data->flipX, data->flipY);
-}
-
-inline void UpdateHitbox(Rectangle* rec, float x, float y, float size)
-{
-    float halfSize = size * 0.5f;
-
-    rec->x = x - halfSize;
-    rec->y = y - halfSize;
-}
-
-inline bool IsPositionOutOfBounds(float x, float y, float offset)
-{
-    return y > NATIVE_SIZE + offset || x < -offset || x > NATIVE_SIZE + offset;
-}
+bool IsPositionOutOfBounds(float x, float y, float offset);
 
 typedef struct Bullet
 {
@@ -156,31 +132,11 @@ void FireBullet(
     float dt
 );
 
-inline void ClearActiveBullets(BulletPool* bulletpool)
-{
-    for(int i = 0; i < BULLET_POOL_SIZE; i++)
-    {
-        Bullet* b = bulletpool->activeBullets[i];
-
-        if(!b) continue;
-
-        bulletpool->activeBullets[i] = NULL;
-        bulletpool->inactiveBullets[i] = b;
-    }
-}
+void ClearActiveBullets(BulletPool* bulletpool);
 
 //physics / collisions
 
-inline void CollideScreenEdges(Rectangle* rec, float* x, float* y)
-{
-    if(rec->x <= 0.0f) *x = rec->width * 0.5f;
-
-    if(rec->x + rec->width >= NATIVE_SIZE) *x = NATIVE_SIZE - rec->width * 0.5f;
-
-    if(rec->y <= 0.0f) *y = rec->height * 0.5f;
-
-    if(rec->y + rec->height >= NATIVE_SIZE) *y = NATIVE_SIZE - rec->height * 0.5f;
-}
+void CollideScreenEdges(Rectangle* rec, float* x, float* y);
 
 //power ups
 

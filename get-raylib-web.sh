@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 git clone --depth 1 https://github.com/raysan5/raylib.git raylib && 
-mkdir -p lib headers && mkdir -p headers/raylib 
+mkdir -p lib headers && mkdir -p headers/raylib &&
 
 cd raylib/src/
 
